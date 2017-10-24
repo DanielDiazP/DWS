@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Constantes.php';
+require_once '../vendor/autoload.php';
 
 /* 
  * To change this license header, choose License Headers in Project Properties.

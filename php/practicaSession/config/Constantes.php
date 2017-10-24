@@ -12,5 +12,28 @@
  * @author DAW
  */
 class Constantes {
-    //put your code here
+    //claves
+    const PASS_1="numero";
+    
+    const PASS_2_1="12";
+    
+    const PASS_2_2="34";
+    
+    const PASS_2_3="56";
+    
+    const PASS_3="n123";
+    //
+    
+    //vistas
+    const PAGINA_ERROR="vista\error.php";
+    
+    const PAGINA_INTERMEDIA="vista\continuar.php";
+    
+    const PAGINA_FINAL="vista\cajaAbierta.php";
+    //
+    
+    //session 
+    const SESSION_ATRIBUTE="nivel";
+    
+    
 }
