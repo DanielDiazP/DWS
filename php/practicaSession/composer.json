@@ -1,0 +1,11 @@
+{
+    "name": "vendor/practica-session",
+    "description": "Description of project practicaSession.",
+    "authors": [
+        {
+            "name": "DAW",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {}
+}
