@@ -32,8 +32,12 @@ class Constantes {
     const PAGINA_FINAL="vista\cajaAbierta.php";
     //
     
-    //session 
-    const SESSION_ATRIBUTE="nivel";
+    //request
+    const REQUEST_KEY="pass";
+    //
     
+    //session 
+    const SESSION_KEY="nivel";
+    //
     
 }

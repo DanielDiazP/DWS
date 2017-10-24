@@ -1,10 +1,6 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+namespace candados;
 
 /**
  * Description of Candado3
@@ -12,5 +8,20 @@
  * @author DAW
  */
 class Candado3 {
-    //put your code here
+    
+    public function siguiente($param) {
+        $paginaSalida = \Constantes::PAGINA_ERROR;
+        $valorSession = "1";
+        
+         if (($param != NULL)) {
+             if(strcmp($param, \Constantes::PASS_3)==0){
+             $paginaSalida= \Constantes::PAGINA_FINAL;
+             $valorSession=session_destroy();
+             }
+         }
+         
+        $_SESSION[\Constantes::SESSION_KEY] = $valorSession;
+        include $paginaSalida;
+        
+    }
 }
