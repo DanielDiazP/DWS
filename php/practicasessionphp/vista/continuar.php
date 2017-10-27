@@ -7,11 +7,12 @@ and open the template in the editor.
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>continuar</title>
     </head>
     <body>
         <?php
-        echo '<h1>Practica Session PHP</h1>';
+        echo '<h1>continuar</h1>';
         ?>
+        
     </body>
 </html>

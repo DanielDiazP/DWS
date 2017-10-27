@@ -13,31 +13,31 @@
  */
 class Constantes {
     //claves
-    const PASS_1="numero";
+    const PASS_1='num';
     
-    const PASS_2_1="12";
+    const PASS_2_1='12';
     
-    const PASS_2_2="34";
+    const PASS_2_2='34';
     
-    const PASS_2_3="56";
+    const PASS_2_3='56';
     
-    const PASS_3="n123";
+    const PASS_3='n123';
     //
     
     //vistas
-    const PAGINA_ERROR="vista\error.php";
+    const PAGINA_ERROR='vista\error.php';
     
-    const PAGINA_INTERMEDIA="vista\continuar.php";
+    const PAGINA_INTERMEDIA='vista\continuar.php';
     
-    const PAGINA_FINAL="vista\cajaAbierta.php";
+    const PAGINA_FINAL='vista\cajaAbierta.php';
     //
     
     //request
-    const REQUEST_KEY="pass";
+    const REQUEST_KEY='pass';
     //
     
     //session 
-    const SESSION_KEY="nivel";
+    const SESSION_KEY='nivel';
     //
     
 }

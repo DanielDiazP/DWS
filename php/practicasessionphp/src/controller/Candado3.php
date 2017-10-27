@@ -11,7 +11,7 @@ class Candado3 {
     
     public function siguiente($param) {
         $paginaSalida = \Constantes::PAGINA_ERROR;
-        $valorSession = "1";
+        $valorSession = 0;
         
          if (($param != NULL)) {
              if(strcmp($param, \Constantes::PASS_3)==0){
