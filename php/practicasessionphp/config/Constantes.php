@@ -21,9 +21,9 @@ class Constantes {
     const PASS_3 = 'n123';
     //
     //vistas
-    const PAGINA_ERROR = 'vista\error.php';
-    const PAGINA_INTERMEDIA = 'vista\continuar.php';
-    const PAGINA_FINAL = 'vista\cajaAbierta.php';
+    const PAGINA_ERROR = 'vista/error.php';
+    const PAGINA_INTERMEDIA = 'vista/continuar.php';
+    const PAGINA_FINAL = 'vista/cajaAbierta.php';
     //
     //request
     const REQUEST_KEY = 'pass';

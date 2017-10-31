@@ -7,14 +7,11 @@ require_once 'config/Config.php';
  *
  * @author DAW
  */
-// use controller\Candado1;
+
 use controller\Candado1;
 use controller\Candado2;
 use controller\Candado3;
 
-require_once './src/controller/Candado1.php';
-require_once './src/controller/Candado2.php';
-require_once './src/controller/Candado3.php';
 
 
 
@@ -22,11 +19,8 @@ $pass = $_REQUEST[\Constantes::REQUEST_KEY];
 $controller;
 
 
-if (isset($_SESSION[\Constantes::SESSION_KEY])) {
-    
-} else {
-    echo "estoy jodiendolo<br>";
-    $_SESSION[Constantes::SESSION_KEY] = 0;
+if (!isset($_SESSION[\Constantes::SESSION_KEY])) {
+     $_SESSION[Constantes::SESSION_KEY] = 0;
 }
 
 switch ($_SESSION[\Constantes::SESSION_KEY]) {
@@ -56,7 +50,6 @@ switch ($_SESSION[\Constantes::SESSION_KEY]) {
         break;
 
     default :
-        echo "voy por defecto<br>";
         //controller1 " error "
         $controller = new Candado1();
         break;
