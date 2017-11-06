@@ -5,10 +5,37 @@
  */
 package servicios;
 
+
+import dao.AlumnosDAO;
+import java.util.List;
+import model.Alumno;
+
+
 /**
  *
  * @author daw
  */
 public class AlumnosServicios {
+    
+    public List<Alumno> getAllAlumnos() {
+        AlumnosDAO dao = new AlumnosDAO();
+
+        return dao.selectAllAlumnos();
+    }
+    public Alumno addAlumno(Alumno alumnoNuevo) {
+        AlumnosDAO dao = new AlumnosDAO();
+
+        return dao.insertAlumno(alumnoNuevo);
+    }
+     public void updAlumno(Alumno alumno) {
+        AlumnosDAO dao = new AlumnosDAO();
+
+       dao.updateAlumno(alumno);
+    }
+      public void delAlumno(Alumno alumno) {
+        AlumnosDAO dao = new AlumnosDAO();
+
+       dao.deleteAlumno(alumno);
+    }
     
 }

@@ -5,10 +5,42 @@
  */
 package dao;
 
+import config.Configuration;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author daw
  */
 public class DBConnection {
-    
+
+    public DBConnection() {
+
+    }
+
+    public Connection getConnection() throws Exception {
+        Class.forName(Configuration.getInstance().getDriverDB());
+        Connection connection = null;
+
+        connection = DriverManager.getConnection(
+                Configuration.getInstance().getUrlDB(),
+                Configuration.getInstance().getUserDB(),
+                Configuration.getInstance().getPassDB());
+
+        return connection;
+    }
+
+    public void cerrarConexion(Connection connection) {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
