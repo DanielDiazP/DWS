@@ -7,6 +7,9 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -40,8 +43,70 @@ public class Alumnos extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
-       
+
+        AlumnosServicios as = new AlumnosServicios();
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        Alumno a = new Alumno();
+        String opcion = request.getParameter("opcion");
+        long id;
+        String nombre = null;
+        String fecha = null;
+        boolean edad;
+        boolean error;
+        Date fch = null;
+
+        switch (opcion) {
+            case "select":
+                request.setAttribute("alumnos", as.getAllAlumnos());
+                break;
+
+            case "insert":
+                nombre = request.getParameter("nombre");
+
+                fecha = request.getParameter("fecha");
+                edad = Boolean.parseBoolean(request.getParameter("edad"));
+                try {
+                    fch = df.parse(fecha);
+                } catch (ParseException e) {
+                }
+                a.setNombre(nombre);
+                a.setFecha_nacimiento(fch);
+                a.setMayor_edad(edad);
+                a = as.addAlumno(a);
+                List<Alumno> alumnos = new ArrayList();
+                alumnos.add(a);
+                request.setAttribute("alumnos", alumnos);
+                break;
+
+            case "delete":
+                id = Long.parseLong(request.getParameter("id"));
+                a.setId(id);
+                error = as.delAlumno(a);
+                request.setAttribute("alumnos", error);
+                break;
+
+            case "update":
+                id = Long.parseLong(request.getParameter("id"));
+                edad = Boolean.parseBoolean(request.getParameter("edad"));
+                fecha = request.getParameter("fecha");
+                try {
+                    fch = df.parse(fecha);
+                } catch (ParseException e) {
+                }
+                a.setId(id);
+                a.setNombre(nombre);
+                a.setFecha_nacimiento(fch);
+                a.setMayor_edad(edad);
+                error = as.updAlumno(a);
+                request.setAttribute("alumnos", error);
+                break;
+
+            default:
+                request.setAttribute("alumnos", as.getAllAlumnos());
+                break;
+        }
+        request.getRequestDispatcher("pintarListaAlumnos.jsp").forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

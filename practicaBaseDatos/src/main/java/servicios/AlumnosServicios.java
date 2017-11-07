@@ -27,15 +27,15 @@ public class AlumnosServicios {
 
         return dao.insertAlumno(alumnoNuevo);
     }
-     public void updAlumno(Alumno alumno) {
+     public boolean updAlumno(Alumno alumno) {
         AlumnosDAO dao = new AlumnosDAO();
 
-       dao.updateAlumno(alumno);
+       return dao.updateAlumno(alumno);
     }
-      public void delAlumno(Alumno alumno) {
+      public boolean delAlumno(Alumno alumno) {
         AlumnosDAO dao = new AlumnosDAO();
 
-       dao.deleteAlumno(alumno);
+       return dao.deleteAlumno(alumno);
     }
     
 }
