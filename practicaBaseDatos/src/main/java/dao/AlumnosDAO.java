@@ -119,7 +119,7 @@ public class AlumnosDAO {
         boolean error=true;
         try {
             con = db.getConnection();
-            stmt = con.prepareStatement("UPDATE ALUMNOS NOMBRE=?,FECHA_NACIMIENTO=?,MAYOR_EDAD=? WHERE ID=?");
+            stmt = con.prepareStatement("UPDATE ALUMNOS set NOMBRE=?,FECHA_NACIMIENTO=?,MAYOR_EDAD=? WHERE ID=?");
 
             stmt.setString(1, alumno.getNombre());
             stmt.setDate(2, new java.sql.Date(alumno.getFecha_nacimiento().getTime()));

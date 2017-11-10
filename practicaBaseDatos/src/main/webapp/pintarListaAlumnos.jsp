@@ -22,32 +22,22 @@
             document.getElementById("edad").value = mayor;
             }
             function boton(num){
-                var nombre=document.getElementById("nombre").value;
-                var id=document.getElementById("idalumno").value;
-                var fecha=document.getElementById("fecha").value;
-                var edad=document.getElementById("edad").value;
                 var opcion=null;
                 switch(num){
                     case 1:
-                        opcion="insert";
+                        opcion="alumnos?opcion=insert";
                         break;
                     case 2:
-                        opcion="delete";
+                        opcion="alumnos?opcion=delete";
                         break;
                     case 3:
-                        opcion="update";
-                        break;
-                    case 4:
-                        opcion="select";
+                        opcion="alumnos?opcion=update";
                         break;
                 }
-                action(opcion,id,nombre,fecha,edad);
+                 document.forms.formulario1.action=opcion;
+                 document.forms.formulario1.submit();
             }
-            function action(opcion,id,nombre,fecha,edad){
-                
-                document.forms.formulario1.action="alumnos?opcion="+opcion+"&id="+id+
-                        "&nombre="+nombre+"&fecha="+fecha+"&edad="+edad;
-            }
+           
         </script>
     </head>
     <body>
@@ -80,14 +70,15 @@
             </c:forEach> 
 
         </table>
-        <form action="" name="formulario1" >
-            <input type="hidden" id="idalumno" />
-            <input type="text" id="nombre" size="12"/>
-            <input type="text" id="fecha" size="12"/>
-            <input type="text" id="edad" size="12"/>
-            <input type="submit" value="insertar" onclick="boton(1);"/>
-            <input type="submit" value="borrar" onclick="boton(2);"/>
-            <input type="submit" value="cambiar" onclick="boton(3);"/>
+        <form action="alumnos" name="formulario1" method="POST" >
+            <input type="hidden" id="idalumno" name="id" />
+            <input type="text" id="nombre" name="nombre" size="12"/>
+            <input type="text" id="fecha" name="fecha" size="12"/>
+            <input type="text" id="edad" name="edad" size="12"/>
+            <input type="button" value="insertar" onclick="boton(1);"/>
+            <input type="button" value="borrar" onclick="boton(2);"/>
+            <input type="button" value="cambiar" onclick="boton(3);"/>
+           
         </form>
 
     </body>
