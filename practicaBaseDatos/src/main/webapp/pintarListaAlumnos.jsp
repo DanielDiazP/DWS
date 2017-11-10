@@ -42,8 +42,10 @@
     </head>
     <body>
         <h1>ALUMNOS</h1>
-
+        <c:out value="${hecho}"></c:out>
+        
         <table border="1">
+            
             <c:forEach items="${alumnos}" var="alumno">  
                 <tr>
                     <td>

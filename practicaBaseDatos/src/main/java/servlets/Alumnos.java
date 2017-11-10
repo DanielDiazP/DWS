@@ -78,7 +78,7 @@ public class Alumnos extends HttpServlet {
                     id = Long.parseLong(request.getParameter("id"));
                     a.setId(id);
                     error = as.delAlumno(a);
-                    request.setAttribute("alumnos", error);
+                    request.setAttribute("hecho", error);
                     break;
 
                 case "update":
@@ -88,7 +88,8 @@ public class Alumnos extends HttpServlet {
                     a.setFecha_nacimiento(fch);
                     a.setMayor_edad(edad);
                     error = as.updAlumno(a);
-                    request.setAttribute("alumnos", error);
+                    
+                    request.setAttribute("hecho", error);
                     break;
             }
 
