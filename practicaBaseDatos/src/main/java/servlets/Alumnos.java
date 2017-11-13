@@ -78,7 +78,12 @@ public class Alumnos extends HttpServlet {
                     id = Long.parseLong(request.getParameter("id"));
                     a.setId(id);
                     error = as.delAlumno(a);
-                    request.setAttribute("hecho", error);
+                    if(error){
+                        request.setAttribute("hecho", "no se ha realizado el borrado");
+                    }else{
+                        request.setAttribute("hecho", "se ha realizado el borrado");
+                    }
+                    
                     break;
 
                 case "update":
