@@ -37,5 +37,9 @@ public class AlumnosServicios {
 
        return dao.deleteAlumno(alumno);
     }
+      public void total(Alumno alumno){
+        AlumnosDAO dao = new AlumnosDAO();
+        dao.total(alumno);
+    }
     
 }

@@ -7,38 +7,34 @@ package dao;
 
 import model.Asignatura;
 
+import java.sql.Connection;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.math.BigInteger;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
+
 /**
  *
  * @author daw
  */
 public class AsignaturasDAO {
-    
-    public List<Asignatura>selectAllAsignaturas(){
-        List<Asignatura> lista=null;
-        DBConnection db=new DBConnection();
-        Connection con =null;
+
+    public List<Asignatura> selectAllAsignaturas() {
+        List<Asignatura> lista = null;
+        DBConnection db = new DBConnection();
+        Connection con = null;
         try {
             con = db.getConnection();
 
             QueryRunner qr = new QueryRunner();
             ResultSetHandler<List<Asignatura>> handler
-              = new BeanListHandler<Asignatura>(Asignatura.class);
+                    = new BeanListHandler<Asignatura>(Asignatura.class);
             lista = qr.query(con, "select * FROM ASIGNATURAS", handler);
 
         } catch (Exception ex) {
@@ -48,32 +44,59 @@ public class AsignaturasDAO {
         }
         return lista;
     }
-    
-    public Asignatura insertAsignatura(Asignatura asignatura){
-        DBConnection db=new DBConnection();
-        Connection con =null;
+
+    public Asignatura insertAsignatura(Asignatura asignatura) {
+        DBConnection db = new DBConnection();
+        Connection con = null;
         try {
             con = db.getConnection();
-
             QueryRunner qr = new QueryRunner();
-            ResultSetHandler<Asignatura> handler
-              = new BeanHandler<Asignatura>(Asignatura.class);
-            asignatura = qr.query(con, "select * FROM ASIGNATURAS", handler);
 
+            long id = qr.insert(con, "insert into ASIGNATURAS (NOMBRE,CICLO,CURSO) values (?,?,?)", new ScalarHandler<Long>(),
+                    asignatura.getNombre(), asignatura.getCiclo(), asignatura.getCurso());
+            asignatura.setId(id);
         } catch (Exception ex) {
             Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             db.cerrarConexion(con);
         }
-        
+
         return asignatura;
     }
-    public boolean updateAsignatura(Asignatura asignatura){
-        boolean error=false;
+
+    public boolean updateAsignatura(Asignatura asignatura) {
+        boolean error = false;
+        DBConnection db = new DBConnection();
+        Connection con = null;
+        try {
+            con = db.getConnection();
+            QueryRunner qr = new QueryRunner();
+            qr.update(con, "UPDATE ASIGNATURAS set NOMBRE=?, CICLO=?, CURSO=? WHERE ID=?", asignatura.getNombre(), asignatura.getCiclo(), asignatura.getCurso(), asignatura.getId());
+
+        } catch (Exception ex) {
+            error = true;
+            Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            db.cerrarConexion(con);
+        }
         return error;
     }
-    public boolean deleteAsignatura(Asignatura asignatura){
-         boolean error=false;
+
+    public boolean deleteAsignatura(Asignatura asignatura) {
+        boolean error = false;
+        DBConnection db = new DBConnection();
+        Connection con = null;
+        try {
+            con = db.getConnection();
+            QueryRunner qr = new QueryRunner();
+            qr.update(con, "DELETE FROM ASIGNATURAS WHERE ID=?", asignatura.getId());
+
+        } catch (Exception ex) {
+            error = true;
+            Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            db.cerrarConexion(con);
+        }
         return error;
     }
 }

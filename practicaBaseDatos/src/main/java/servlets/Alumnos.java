@@ -49,52 +49,52 @@ public class Alumnos extends HttpServlet {
             Alumno a = new Alumno();
             String opcion = request.getParameter("opcion");
             long id = 0;
-            String nombre="";
-            String fecha="";
-            nombre = request.getParameter("nombre");
-             fecha = request.getParameter("fecha");
             boolean error;
-            Date fch = null;
+            String nombre = "";
+            String fecha = "";
             boolean edad = Boolean.parseBoolean(request.getParameter("edad"));
+            nombre = request.getParameter("nombre");
+            fecha = request.getParameter("fecha");
+
+            Date fch = null;
+
             try {
                 fch = df.parse(fecha);
             } catch (ParseException e) {
-                int i =0;
-                
+                int i = 0;
             }
+            a.setNombre(nombre);
+            a.setFecha_nacimiento(fch);
+            a.setMayor_edad(edad);
 
             switch (opcion) {
                 case "insert":
-                    a.setNombre(nombre);
-                    a.setFecha_nacimiento(fch);
-                    a.setMayor_edad(edad);
                     a = as.addAlumno(a);
                     List<Alumno> alumnos = new ArrayList();
                     alumnos.add(a);
                     request.setAttribute("alumnos", alumnos);
                     break;
-                    
+
                 case "delete":
                     id = Long.parseLong(request.getParameter("id"));
                     a.setId(id);
                     error = as.delAlumno(a);
-                    if(error){
-                        request.setAttribute("hecho", "no se ha realizado el borrado");
-                    }else{
-                        request.setAttribute("hecho", "se ha realizado el borrado");
+                    if (error) {
+                        request.setAttribute("foreign", "Al borrar el alumno se borraran las notas");
+                        request.setAttribute("alumno", a);
                     }
-                    
                     break;
 
                 case "update":
                     id = Long.parseLong(request.getParameter("id"));
                     a.setId(id);
-                    a.setNombre(nombre);
-                    a.setFecha_nacimiento(fch);
-                    a.setMayor_edad(edad);
                     error = as.updAlumno(a);
-                    
+
                     request.setAttribute("hecho", error);
+                    break;
+                case "total":
+                    a.setId(Long.parseLong(request.getParameter("id")));
+                    as.total(a);
                     break;
             }
 

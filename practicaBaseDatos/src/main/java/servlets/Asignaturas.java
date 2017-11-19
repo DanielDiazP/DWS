@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Asignatura;
+import servicios.AsignaturasServicios;
 
 /**
  *
@@ -31,19 +33,37 @@ public class Asignaturas extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Asignaturas</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Asignaturas at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        AsignaturasServicios as = new AsignaturasServicios();
+
+        if (request.getParameter("opcion") != null) {
+            Asignatura a = new Asignatura();
+            boolean error;
+            String opcion = request.getParameter("opcion");
+            a.setNombre(request.getParameter("nombre"));
+            a.setCiclo(request.getParameter("ciclo"));
+            a.setCurso(request.getParameter("curso"));
+
+            switch (opcion) {
+                case "insert":
+                    as.addAsignaturas(a);
+                    break;
+                case "delete":
+                    a.setId(Long.parseLong(request.getParameter("id")));
+                    error = as.delAsignaturas(a);
+                    request.setAttribute("hecho", error);
+                    break;
+                case "update":
+                    a.setId(Long.parseLong(request.getParameter("id")));
+                    error = as.updAsignaturas(a);
+                    request.setAttribute("hecho", error);
+                    break;
+            }
+
         }
+
+        request.setAttribute("asignaturas", as.getAllAsignaturas());
+        request.getRequestDispatcher("pintarListaAsignaturas.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -20,17 +20,17 @@ public class AsignaturasServicios {
 
         return dao.selectAllAsignaturas();
     }
-    public Asignatura addAlumno(Asignatura asignaturaNueva) {
+    public Asignatura addAsignaturas(Asignatura asignaturaNueva) {
         AsignaturasDAO dao = new AsignaturasDAO();
 
         return dao.insertAsignatura(asignaturaNueva);
     }
-     public boolean updAlumno(Asignatura asignatura) {
+     public boolean updAsignaturas(Asignatura asignatura) {
         AsignaturasDAO dao = new AsignaturasDAO();
 
        return dao.updateAsignatura(asignatura);
     }
-      public boolean delAlumno(Asignatura asignatura) {
+      public boolean delAsignaturas(Asignatura asignatura) {
         AsignaturasDAO dao = new AsignaturasDAO();
 
        return dao.deleteAsignatura(asignatura);

@@ -12,47 +12,59 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Alumnos</title>
         <script>
 
             function cargarAlumno(id, nombre, fecha, mayor) {
-            document.getElementById("nombre").value = nombre;
-            document.getElementById("idalumno").value = id;
-            document.getElementById("fecha").value = fecha;
-            document.getElementById("edad").value = mayor;
+                document.getElementById("nombre").value = nombre;
+                document.getElementById("idalumno").value = id;
+                document.getElementById("fecha").value = fecha;
+                document.getElementById("edad").value = mayor;
             }
-            function boton(num){
-                var opcion=null;
-                switch(num){
+            function boton(num) {
+                var opcion = null;
+                switch (num) {
                     case 1:
-                        opcion="alumnos?opcion=insert";
+                        opcion = "alumnos?opcion=insert";
                         break;
                     case 2:
-                        opcion="alumnos?opcion=delete";
+                        opcion = "alumnos?opcion=delete";
                         break;
                     case 3:
-                        opcion="alumnos?opcion=update";
+                        opcion = "alumnos?opcion=update";
                         break;
                 }
-                 document.forms.formulario1.action=opcion;
-                 document.forms.formulario1.submit();
+                document.forms.formulario1.action = opcion;
+                document.forms.formulario1.submit();
             }
-           
+
         </script>
     </head>
     <body>
         <h1>ALUMNOS</h1>
-        <c:out value="${hecho}"></c:out>
-        
+        <c:if test="${foreign != null}">
+            <script>
+                var seguir = confirm("${foreign}" + "\n¿Borrar?");
+                if (seguir === true) {
+                    document.getElementById("nombre").value = "${alumno.nombre}";
+                    document.getElementById("idalumno").value = "${alumno.id}";
+                    document.getElementById("fecha").value = "${fecha}";
+                    document.getElementById("edad").value = "${alumno.mayor_edad}";
+                    document.forms.formulario1.action = "alumnos?opcion=total";
+                    document.forms.formulario1.submit();
+                }
+            </script>
+        </c:if>
+
         <table border="1">
-            
+
             <c:forEach items="${alumnos}" var="alumno">  
                 <tr>
                     <td>
                         <input type="button" value="cargar ${alumno.id}" 
                                onclick="cargarAlumno('${alumno.id}',
-                                                   '${alumno.nombre}',
-                                                   '<fmt:formatDate value="${alumno.fecha_nacimiento}" pattern="dd-MM-yyyy"/>',
+                                               '${alumno.nombre}',
+                                               '<fmt:formatDate value="${alumno.fecha_nacimiento}" pattern="dd-MM-yyyy"/>',
                                ${alumno.mayor_edad});"/>
                     </td> 
                     <td>
@@ -80,7 +92,6 @@
             <input type="button" value="insertar" onclick="boton(1);"/>
             <input type="button" value="borrar" onclick="boton(2);"/>
             <input type="button" value="cambiar" onclick="boton(3);"/>
-           
         </form>
 
     </body>

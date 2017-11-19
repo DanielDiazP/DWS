@@ -5,22 +5,21 @@
  */
 package dao;
 
-import java.lang.invoke.MethodHandles;
 import model.Alumno;
-import java.math.BigInteger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
 
 /**
  *
@@ -116,7 +115,7 @@ public class AlumnosDAO {
         DBConnection db = new DBConnection();
         Connection con = null;
         PreparedStatement stmt = null;
-        boolean error=true;
+        boolean error = false;
         try {
             con = db.getConnection();
             stmt = con.prepareStatement("UPDATE ALUMNOS set NOMBRE=?,FECHA_NACIMIENTO=?,MAYOR_EDAD=? WHERE ID=?");
@@ -126,9 +125,9 @@ public class AlumnosDAO {
             stmt.setBoolean(3, alumno.getMayor_edad());
             stmt.setLong(4, alumno.getId());
             stmt.executeUpdate();
-            error=false;
 
         } catch (Exception e) {
+            error = true;
             Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, e);
 
         } finally {
@@ -149,16 +148,19 @@ public class AlumnosDAO {
         DBConnection db = new DBConnection();
         Connection con = null;
         PreparedStatement stmt = null;
-        boolean error=true;
+        boolean error = false;
         try {
             con = db.getConnection();
             stmt = con.prepareStatement("DELETE FROM ALUMNOS WHERE ID=?");
-
             stmt.setLong(1, alumno.getId());
             stmt.executeUpdate();
-            error=false;
+
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
+            error = true;
 
         } catch (Exception e) {
+
             Logger.getLogger(AlumnosDAO.class
                     .getName()).log(Level.SEVERE, null, e);
         } finally {
@@ -173,5 +175,38 @@ public class AlumnosDAO {
             db.cerrarConexion(con);
         }
         return error;
+    }
+
+    public void total(Alumno alumno) {
+        DBConnection db = new DBConnection();
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+
+            con = db.getConnection();
+            con.setAutoCommit(false);
+            stmt = con.prepareStatement("DELETE FROM NOTAS WHERE ID_ALUMNO=?");
+            stmt.setLong(1, alumno.getId());
+            stmt.executeUpdate();
+
+            stmt = con.prepareStatement("DELETE FROM ALUMNOS WHERE ID=?");
+            stmt.setLong(1, alumno.getId());
+            stmt.executeUpdate();
+
+            con.commit();
+
+        } catch (Exception ex) {
+            Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException ex1) {
+                Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            db.cerrarConexion(con);
+        }
+
     }
 }
