@@ -24,8 +24,9 @@ and open the template in the editor.
         $sql = "SELECT * FROM `ALUMNOS`";
         $result = $conn->query($sql);
 
-      
-        echo '<table border=1 cellspacing=4 cellpadding=4>';
+      ?>
+        <table border=1 cellspacing=4 cellpadding=4>
+            <?php
         while ($row = $result->fetch_assoc()) {
         echo '
              <tr> 
