@@ -9,27 +9,27 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <title></title>
         <script>
-            function cargarAlumno(id, nombre, fecha, mayor) {
-                document.getElementById("nombre").value = nombre;
-                document.getElementById("idalumno").value = id;
-                document.getElementById("fecha").value = fecha;
-                document.getElementById("edad").value = mayor;
+            function cargarAsignatura(id, nombre, ciclo, curso) {
+            document.getElementById("idasignatura").value = id;
+            document.getElementById("nombre").value = nombre;
+            document.getElementById("ciclo").value = ciclo;
+            document.getElementById("curso").value = curso;
             }
             function boton(num) {
-                var opcion = null;
-                switch (num) {
-                    case 1:
-                        opcion = "alumnosMysqli.php?opcion=insert";
-                        break;
-                    case 2:
-                        opcion = "alumnosMysqli.php?opcion=delete";
-                        break;
-                    case 3:
-                        opcion = "alumnosMysqli.php?opcion=update";
-                        break;
-                }
-                document.forms.formulario1.action = opcion;
-                document.forms.formulario1.submit();
+            var opcion = null;
+            switch (num) {
+            case 1:
+                    opcion = "asignaturasPdo.php?opcion=insert";
+            break;
+            case 2:
+                    opcion = "asignaturasPdo.php?opcion=delete";
+            break;
+            case 3:
+                    opcion = "asignaturasPdo.php?opcion=update";
+            break;
+            }
+            document.forms.formulario1.action = opcion;
+            document.forms.formulario1.submit();
             }
         </script>
     </head>
@@ -40,10 +40,9 @@ and open the template in the editor.
         $password = "c557ef";
         $database = "clasesdaw";
         $controllerOpcion;
-        $controllerEdad;
+        $controllerCiclo;
         $controllerNombre;
-        $dateController;
-        $controllerFecha;
+        $controllerCurso;
         $controllerId;
         $sql;
         $statement;
@@ -56,22 +55,24 @@ and open the template in the editor.
         //----------------------Controller Inicio----------------------
         if (isset($_REQUEST["opcion"])) {
             $controllerOpcion = $_REQUEST["opcion"];
-            $controllerEdad = $_REQUEST["edad"];
+            $controllerCiclo = $_REQUEST["ciclo"];
             $controllerNombre = $_REQUEST["nombre"];
-            $dateController = new DateTime($_POST["fecha"]);
-            $controllerFecha = $dateController->format('Y-m-d');
-            if (isset($_REQUEST["idalumno"])) {
-                $controllerId = $_REQUEST["idalumno"];
+            $controllerCurso = $_REQUEST["curso"];
+            if (isset($_REQUEST["idasignatura"])) {
+                $controllerId = $_REQUEST["idasignatura"];
             }
         }
         //----------------------Controller Fin----------------------
         //-----------------------DAO Inicio----------------------------
         //crear conexion
-        $conn = new mysqli($servername, $username, $password, $database);
-        //checkear conexion
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+        try {
+            $conn = new PDO("mysql:dbname=$database;host=$servername", $username, $password);
+            //checkear conexion
+        } catch (PDOException $ex) {
+            echo "Error al conectar la BD " . $ex->getMessage() . "<br>";
         }
+
+
 
         switch ($controllerOpcion) {
             case "insert":
@@ -126,22 +127,22 @@ and open the template in the editor.
             }
             ?>
         </table>
-        <form action="alumnosMysqli.php" name="formulario1" method="post" >
-            <input type="hidden" id="idalumno" name="idalumno" />
+        <form action="asignaturasPdo.php" name="formulario1" method="POST" >
+            <input type="hidden" id="idasignatura" name="idasignatura" />
             <input type="text" id="nombre" name="nombre" size="12"/>
-            <input type="text" id="fecha" name="fecha" size="12"/>
-            <input type="text" id="edad" name="edad" size="12"/>
+            <input type="text" id="ciclo" name="ciclo" size="12"/>
+            <input type="text" id="curso" name="curso" size="12"/>
             <input type="button" value="insertar" onclick="boton(1);"/>
             <input type="button" value="borrar" onclick="boton(2);"/>
-            <input type="button" value="cambiar" onclick="boton(3);"/>
-        </form>
-        <!-----------------------Cliente Fin-------------------->
-        <?php
-        $statement->close();
-        $result->free();
-        $conn->close();
-        ?>
+            <input type="button" value="cambiar" onclick="boton(3
+            </form>
+            <!-----------------------Cliente Fin-------------------->
+                   <?php
+                   $statement->close();
+                   $result->free();
+                   $conn->close();
+                   ?>
 
 
-    </body>
-</html>
+                < /body>
+        </html>
