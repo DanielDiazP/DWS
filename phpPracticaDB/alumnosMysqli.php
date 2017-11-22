@@ -102,8 +102,9 @@ and open the template in the editor.
         }
         $sql = "SELECT * FROM `ALUMNOS`";
         $result = $conn->query($sql);
-        ?>
         //-----------------------DAO Fin----------------------------
+        ?>
+        
 
 
 
@@ -113,14 +114,16 @@ and open the template in the editor.
             <?php
             while ($row = $result->fetch_assoc()) {
                 $dateCliente = new DateTime($row["FECHA_NACIMIENTO"]);
-                $fechaCliente = $dateCliente->format('d-m-Y')
+                $fechaCliente = $dateCliente->format('d-m-Y');
+                $nombre=$row["NOMBRE"];
+                $edad=$row["MAYOR_EDAD"];
                 ?>
 
                 <tr> 
-                    <td><input type="button" value="cargar"  onclick="cargarAlumno('<?php echo $row["ID"] ?>', '<?php echo $row["NOMBRE"] ?>', '<?php echo $row["FECHA_NACIMIENTO"] ?>', '<?php echo $row["MAYOR_EDAD"] ?>')"/></td>
-                    <td><?php echo $row["NOMBRE"] ?></td>
+                    <td><input type="button" value="cargar"  onclick="cargarAlumno('<?php echo $row["ID"] ?>', '<?php echo htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') ?>', '<?php echo $row["FECHA_NACIMIENTO"] ?>', '<?php echo htmlspecialchars($edad, ENT_QUOTES, 'UTF-8') ?>')"/></td>
+                    <td><?php echo $nombre ?></td>
                     <td><?php echo $fechaCliente ?></td>
-                    <td><input type="checkbox" name="mayor" <?php if ($row["MAYOR_EDAD"]) { ?> checked <?php } ?> /></td>
+                    <td><input type="checkbox" name="mayor" <?php if ($edad) { ?> checked <?php } ?> /></td>
                 </tr>
                 <?php
             }

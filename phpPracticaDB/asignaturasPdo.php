@@ -46,10 +46,7 @@ and open the template in the editor.
         $controllerId;
         $sql;
         $statement;
-        $parametro;
-        $parametro1;
-        $parametro2;
-        $parametro3;
+
 
 
         //----------------------Controller Inicio----------------------
@@ -67,44 +64,61 @@ and open the template in the editor.
         //crear conexion
         try {
             $conn = new PDO("mysql:dbname=$database;host=$servername", $username, $password);
+            $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);//utiliza declaraciones preparadas nativas, si estuviese en true emula las delcaraciones preparadas;
             //checkear conexion
         } catch (PDOException $ex) {
             echo "Error al conectar la BD " . $ex->getMessage() . "<br>";
+            die();
         }
 
 
 
         switch ($controllerOpcion) {
             case "insert":
-                $parametro = $controllerNombre;
-                $parametro1 = $controllerFecha;
-                $parametro2 = $controllerEdad;
-                $statement = $conn->prepare("INSERT INTO ALUMNOS (NOMBRE,FECHA_NACIMIENTO,MAYOR_EDAD) VALUES(?,?,?)");
-                $statement->bind_param('ssi', $parametro, $parametro1, $parametro2);
+                try{
+                $statement = $conn->prepare("insert into ASIGNATURAS (NOMBRE,CICLO,CURSO) values ( :nombre, :ciclo, :curso)");
+                $statement->bindParam(":nombre", $controllerNombre, PDO::PARAM_STR);
+                $statement->bindParam(":ciclo", $controllerCiclo, PDO::PARAM_STR);
+                $statement->bindParam(":curso", $controllerCurso, PDO::PARAM_STR);
                 $statement->execute();
+                //$newId = $conn->lastInsertId(); para coger el auto incremental
+                }catch(PDOException $ex){
+                    echo "Fallo al insertar " . $ex->getMessage() ."<br>";
+                    die();
+                }
+                
                 break;
 
             case "delete":
-                $parametro = $controllerId;
-                $statement = $conn->prepare("DELETE FROM ALUMNOS WHERE ID=?");
-                $statement->bind_param('i', $parametro);
+                try{
+                $statement = $conn->prepare("DELETE FROM ASIGNATURAS WHERE ID= :id");
+                $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
                 $statement->execute();
+                }catch(PDOException $ex){
+                    echo "Fallo al borrar " . $ex->getMessage() ."<br>";
+                    die();
+                }
                 break;
 
             case "update":
-                $parametro = $controllerNombre;
-                $parametro1 = $controllerFecha;
-                $parametro2 = $controllerEdad;
-                $parametro3 = $controllerId;
-                $statement = $conn->prepare("UPDATE ALUMNOS set NOMBRE=?,FECHA_NACIMIENTO=?,MAYOR_EDAD=? WHERE ID=?");
-                $statement->bind_param('ssii', $parametro, $parametro1, $parametro2, $parametro3);
+                try{
+                $statement = $conn->prepare("UPDATE ASIGNATURAS set NOMBRE= :nombre, CICLO= :ciclo, CURSO= :curso WHERE ID= :id");
+                $statement->bindParam(":nombre", $controllerNombre,PDO::PARAM_STR);
+                $statement->bindParam(":ciclo", $controllerCiclo, PDO::PARAM_STR);
+                $statement->bindParam(":curso", $controllerCurso, PDO::PARAM_STR);
+                $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
                 $statement->execute();
+                }catch(PDOException $ex){
+                    echo "Fallo al cambiar " . $ex->getMessage() ."<br>";
+                    die();
+                }
                 break;
         }
-        $sql = "SELECT * FROM `ALUMNOS`";
-        $result = $conn->query($sql);
+        $result=$conn->prepare("select * FROM ASIGNATURAS");
+        $result->execute();
+          //-----------------------DAO Fin----------------------------
         ?>
-        //-----------------------DAO Fin----------------------------
+      
 
 
 
@@ -112,16 +126,17 @@ and open the template in the editor.
         <!-----------------------Cliente Inicio-------------------->
         <table border=1 cellspacing=4 cellpadding=4>
             <?php
-            while ($row = $result->fetch_assoc()) {
-                $dateCliente = new DateTime($row["FECHA_NACIMIENTO"]);
-                $fechaCliente = $dateCliente->format('d-m-Y')
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $nombre=$row["NOMBRE"];
+                $curso=$row["CURSO"];
+                $ciclo=$row["CICLO"];
                 ?>
 
                 <tr> 
-                    <td><input type="button" value="cargar"  onclick="cargarAlumno('<?php echo $row["ID"] ?>', '<?php echo $row["NOMBRE"] ?>', '<?php echo $row["FECHA_NACIMIENTO"] ?>', '<?php echo $row["MAYOR_EDAD"] ?>')"/></td>
-                    <td><?php echo $row["NOMBRE"] ?></td>
-                    <td><?php echo $fechaCliente ?></td>
-                    <td><input type="checkbox" name="mayor" <?php if ($row["MAYOR_EDAD"]) { ?> checked <?php } ?> /></td>
+                    <td><input type="button" value="cargar"  onclick="cargarAsignatura('<?php echo $row["id"] ?>', '<?php echo htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') ?>', '<?php echo htmlspecialchars($curso, ENT_QUOTES, 'UTF-8') ?>', '<?php echo htmlspecialchars($ciclo, ENT_QUOTES, 'UTF-8') ?>')"/></td>
+                    <td><?php echo $nombre ?></td>
+                    <td><?php echo $curso ?></td>
+                    <td><?php echo $ciclo ?></td>
                 </tr>
                 <?php
             }
@@ -130,19 +145,19 @@ and open the template in the editor.
         <form action="asignaturasPdo.php" name="formulario1" method="POST" >
             <input type="hidden" id="idasignatura" name="idasignatura" />
             <input type="text" id="nombre" name="nombre" size="12"/>
-            <input type="text" id="ciclo" name="ciclo" size="12"/>
             <input type="text" id="curso" name="curso" size="12"/>
+            <input type="text" id="ciclo" name="ciclo" size="12"/>
             <input type="button" value="insertar" onclick="boton(1);"/>
             <input type="button" value="borrar" onclick="boton(2);"/>
-            <input type="button" value="cambiar" onclick="boton(3
+            <input type="button" value="cambiar" onclick="boton(3);"/>
             </form>
             <!-----------------------Cliente Fin-------------------->
                    <?php
-                   $statement->close();
-                   $result->free();
-                   $conn->close();
+                   $statement->null;
+                   $result->null;
+                   $conn->null;
                    ?>
 
 
-                < /body>
+                </body>
         </html>
