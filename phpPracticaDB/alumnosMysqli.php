@@ -47,10 +47,7 @@ and open the template in the editor.
         $controllerId;
         $sql;
         $statement;
-        $parametro;
-        $parametro1;
-        $parametro2;
-        $parametro3;
+        $foreign;
 
 
         //----------------------Controller Inicio----------------------
@@ -58,8 +55,12 @@ and open the template in the editor.
             $controllerOpcion = $_REQUEST["opcion"];
             $controllerEdad = $_REQUEST["edad"];
             $controllerNombre = $_REQUEST["nombre"];
+            try{
             $dateController = new DateTime($_POST["fecha"]);
             $controllerFecha = $dateController->format('Y-m-d');
+            } catch (Exception $e){
+                echo "Fallo al convertir la fecha";
+            }
             if (isset($_REQUEST["idalumno"])) {
                 $controllerId = $_REQUEST["idalumno"];
             }
@@ -75,48 +76,81 @@ and open the template in the editor.
 
         switch ($controllerOpcion) {
             case "insert":
-                $parametro = $controllerNombre;
-                $parametro1 = $controllerFecha;
-                $parametro2 = $controllerEdad;
-                $statement = $conn->prepare("INSERT INTO ALUMNOS (NOMBRE,FECHA_NACIMIENTO,MAYOR_EDAD) VALUES(?,?,?)");
-                $statement->bind_param('ssi', $parametro, $parametro1, $parametro2);
-                $statement->execute();
+                try {
+                    $statement = $conn->prepare("INSERT INTO ALUMNOS (NOMBRE,FECHA_NACIMIENTO,MAYOR_EDAD) VALUES(?,?,?)");
+                    $statement->bind_param('ssi', $controllerNombre, $controllerFecha, $controllerEdad);
+                    $statement->execute();
+                } catch (Exception $ex) {
+                    echo "Fallo al insertar";
+                }
                 break;
 
             case "delete":
-                $parametro = $controllerId;
-                $statement = $conn->prepare("DELETE FROM ALUMNOS WHERE ID=?");
-                $statement->bind_param('i', $parametro);
-                $statement->execute();
+                try {
+                    $statement = $conn->prepare("DELETE FROM ALUMNOS WHERE ID=?");
+                    $statement->bind_param('i', $controllerId);
+                    $statement->execute();
+                } catch (mysqli_sql_exception $ef) {
+                    if ($ef->getCode() == 'CODE FOR FK') {
+                        $foreign = true;
+                        echo "No se puede realizar la eliminacion del alumno, existe una fk";
+                    } else {
+                        $foreign = false;
+                    }
+                } catch (Exception $ex) {
+                    echo "Fallo al borrar";
+                }
                 break;
 
             case "update":
-                $parametro = $controllerNombre;
-                $parametro1 = $controllerFecha;
-                $parametro2 = $controllerEdad;
-                $parametro3 = $controllerId;
-                $statement = $conn->prepare("UPDATE ALUMNOS set NOMBRE=?,FECHA_NACIMIENTO=?,MAYOR_EDAD=? WHERE ID=?");
-                $statement->bind_param('ssii', $parametro, $parametro1, $parametro2, $parametro3);
-                $statement->execute();
+                try {
+                    $statement = $conn->prepare("UPDATE ALUMNOS set NOMBRE=?,FECHA_NACIMIENTO=?,MAYOR_EDAD=? WHERE ID=?");
+                    $statement->bind_param('ssii', $controllerNombre, $controllerFecha, $controllerEdad, $controllerId);
+                    $statement->execute();
+                } catch (Exception $ex) {
+                    echo "Fallo al actualizar";
+                }
+                break;
+            case "total":
+
                 break;
         }
-        $sql = "SELECT * FROM `ALUMNOS`";
-        $result = $conn->query($sql);
+        try {
+            $sql = "SELECT * FROM `ALUMNOS`";
+            $result = $conn->query($sql);
+        } catch (Exception $ex) {
+            echo "Fallo al extraer alumnos";
+        }
         //-----------------------DAO Fin----------------------------
         ?>
-        
-
-
-
 
         <!-----------------------Cliente Inicio-------------------->
+        <?php
+        if ($foreign) {
+            ?>
+            <script>
+                var seguir = confirm("El alumno selecionado tiene nota \n¿Borrar?");
+                if (seguir === true) {
+                    document.getElementById("nombre").value =<?php echo $controllerNombre ?>;
+                    document.getElementById("idalumno").value = <?php echo $controllerId ?>;
+                    document.getElementById("fecha").value = <?php echo $controllerFecha ?>;
+                    document.getElementById("edad").value = <?php echo $controllerEdad ?>;
+                    document.forms.formulario1.action = "alumnosMysqli.php?opcion=total";
+                    document.forms.formulario1.submit();
+                }
+            </script>
+
+            <?php
+        }
+        ?>
+
         <table border=1 cellspacing=4 cellpadding=4>
             <?php
             while ($row = $result->fetch_assoc()) {
                 $dateCliente = new DateTime($row["FECHA_NACIMIENTO"]);
                 $fechaCliente = $dateCliente->format('d-m-Y');
-                $nombre=$row["NOMBRE"];
-                $edad=$row["MAYOR_EDAD"];
+                $nombre = $row["NOMBRE"];
+                $edad = $row["MAYOR_EDAD"];
                 ?>
 
                 <tr> 
