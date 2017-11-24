@@ -54,6 +54,8 @@ and open the template in the editor.
         $controllerNota;
         $sql;
         $statement;
+        $notas;
+        $valor="introduce notas";
 
 
 
@@ -65,6 +67,7 @@ and open the template in the editor.
             $controllerIdAlumno = $_REQUEST["idAlumno"];
             $controllerIdAsignatura = $_REQUEST["idAsignatura"];
             $controllerNota = $_REQUEST["nota"];
+            $notas=null;
         }
         //----------------------Controller Fin----------------------
         //-----------------------DAO Inicio----------------------------
@@ -74,7 +77,7 @@ and open the template in the editor.
             $conn->autoReconnect = false;
             //checkear conexion
         } catch (Exception $ex) {
-            echo "Error al conectar la BD " . $ex->getMessage() . "<br>"; //// mirar este apartado!!
+            echo "Error al conectar la BD " . $ex->getMessage() . "<br>";
             die();
         }
 
@@ -82,60 +85,54 @@ and open the template in the editor.
 
         switch ($controllerOpcion) {
             case "insert":
-                $parametros = Array($controllerIdAlumno, $controllerIdAsignatura, $controllerNota);
-                $statement = $conn->rawQuery("INSERT INTO NOTAS (ID_ALUMNO,ID_ASIGNATURA,NOTA) VALUES(?,?,?)", $parametros);
-                if ($statement->getLastErrno() === 0) {
-                    $statement->commit();
-                } else {
-                    echo 'Fallo al insertar ' . $statement->getLastError() . "<br>";
-                    $statement->rollback();
-                    die();
+                try{
+                $parametros = Array("ID_ALUMNO" => $controllerIdAlumno, "ID_ASIGNATURA" => $controllerIdAsignatura, "NOTA" => $controllerNota);
+                $statement = $conn->insert("NOTAS", $parametros);
+                } catch (Exception $e){
+                    echo "error al insertar";
                 }
                 break;
 
             case "delete":
-                $parametros = Array($controllerIdAlumno, $controllerIdAsignatura);
-                $statement = $conn->prepare("delete from NOTAS where ID_ALUMNO = ? AND ID_ASIGNATURA = ?", $parametros);
-                if ($statement->getLastErrno() === 0) {
-                    $statement->commit();
-                } else {
-                    echo 'Fallo al borrar ' . $statement->getLastError() . "<br>";
-                    $statement->rollback();
-                    die();
+                try{
+                $conn->where('ID_ALUMNO', $controllerIdAlumno);
+                $conn->where('ID_ASIGNATURA', $controllerIdAsignatura);
+                $statement = $conn->delete('NOTAS');
+                 } catch (Exception $e){
+                    echo "error al borrar";
                 }
                 break;
 
             case "update":
-                $parametros = Array($controllerNota, $controllerIdAlumno, $controllerIdAsignatura);
-                $statement = $conn->prepare("update NOTAS set NOTA=? where ID_ALUMNO=? AND ID_ASIGNATURA=?", $parametros);
-                if ($statement->getLastErrno() === 0) {
-                    $statement->commit();
-                } else {
-                    echo 'Fallo al actualizar ' . $statement->getLastError() . "<br>";
-                    $statement->rollback();
-                    die();
+                try{
+                $parametros = Array('NOTA' => $controllerNota);
+                $conn->where('ID_ALUMNO', $controllerIdAlumno);
+                $conn->where('ID_ASIGNATURA', $controllerIdAsignatura);
+                $statement = $conn->update('NOTAS', $parametros);
+                 } catch (Exception $e){
+                    echo "error al actualizar";
                 }
                 break;
             case "select":
+                try{
                 $parametros = Array($controllerIdAlumno, $controllerIdAsignatura);
-                $statement = $conn->prepare("select * from NOTAS where ID_ALUMNO=? AND ID_ASIGNATURA=?", $parametros);
-                if ($statement->getLastErrno() === 0) {
-                    $statement->commit();
-                } else {
-                    echo 'Fallo al actualizar ' . $statement->getLastError() . "<br>";
-                    $statement->rollback();
-                    die();
+                $notas = $conn->rawQuery("select * from NOTAS where ID_ALUMNO=? AND ID_ASIGNATURA=?", $parametros);
+                if($notas==null){
+                    $valor="no tiene notas";
+                }else{
+                    $valor="Introducir notas";
+                }
+                 } catch (Exception $e){
+                    echo "error al seleccionar";
                 }
                 break;
         }
-        $alumnos = $conn->get("ALUMNOS");
-        $asignaturas = $conn->get("ASIGNATURAS");
-        if ($alumnos->getLastErrno() === 0 || $asignaturas->getLastErrno() === 0) {
-            
-        } else {
-            echo 'Fallo al extraer alumnos o asignaturas ' . $conn->getLastError() . "<br>";
-            die();
-        }
+        try{
+        $alumnos = $conn->get('ALUMNOS');
+        $asignaturas = $conn->get('ASIGNATURAS');
+         } catch (Exception $e){
+                    echo "error al obtener el listado de alumnos/asigaturas";
+                }
         //-----------------------DAO Fin----------------------------
         ?>
 
@@ -144,47 +141,32 @@ and open the template in the editor.
 
 
         <!-----------------------Cliente Inicio-------------------->
-        
-        
-         <span>Alumno: </span>
+
+
+        <label>Alumno: </label>
         <select id="alumno" onchange="cargarAlumno(this.value, this.options[this.selectedIndex].innerHTML)">
             <option disabled selected>alumno</option>
-            <c:forEach items="${alumnos}" var="alumno">
-                <option value="${alumno.id}" name="${alumno.nombre}">${alumno.nombre}</option>
-            </c:forEach>
-        </select>
-
-        <span>Asignatura: </span>
-        <select id="asignatura" onchange="cargarAsignatura(this.value, this.options[this.selectedIndex].innerHTML)">
-            <option disabled selected>asignatura</option>
-            <c:forEach items="${asignaturas}" var="asignatura">
-                <option value="${asignatura.id}">${asignatura.nombre}</option>
-            </c:forEach>
-        </select>
-        
-        
-        
-        <table border=1 cellspacing=4 cellpadding=4>
             <?php
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $nombre = $row["NOMBRE"];
-                $curso = $row["CURSO"];
-                $ciclo = $row["CICLO"];
+            foreach ($alumnos as $alumno) {
                 ?>
-
-                <tr> 
-                    <td><input type="button" value="cargar"  onclick="cargarAsignatura('<?php echo $row["id"] ?>', '<?php echo htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') ?>', '<?php echo htmlspecialchars($curso, ENT_QUOTES, 'UTF-8') ?>', '<?php echo htmlspecialchars($ciclo, ENT_QUOTES, 'UTF-8') ?>')"/></td>
-                    <td><?php echo $nombre ?></td>
-                    <td><?php echo $curso ?></td>
-                    <td><?php echo $ciclo ?></td>
-                </tr>
+                <option value="<?php echo $alumno["ID"] ?>"><?php echo $alumno["NOMBRE"] ?></option>
                 <?php
             }
             ?>
-        </table>
-        
-        
-        
+        </select>
+
+        <label>Asignatura: </label>
+        <select id="asignatura" onchange="cargarAsignatura(this.value, this.options[this.selectedIndex].innerHTML)">
+            <option disabled selected>asignatura</option>
+            <?php
+            foreach ($asignaturas as $asignatura) {
+                ?>
+                <option value="<?php echo $asignatura["id"] ?>"><?php echo $asignatura["NOMBRE"] ?></option>
+                <?php
+            }
+            ?>
+        </select>
+
         <form action="notasMysqliDB.php" name="formulario1" method="POST" >
             <table>
                 <tr>
@@ -200,33 +182,38 @@ and open the template in the editor.
                         <input type="hidden" id="idasignatura" name="idAsignatura"/>
                         <input type="text" id="nombreAs" name="nombreAsignatura" />
                     </td>
-                    <td>
-
-
-                    </td>
                 </tr>
                 <tr>
+                    <?php
+                    if ($notas != null) {
+                        foreach ($notas as $nota) {
+                            ?>
+                            <td>
+
+                                NOTA <input type="text" value="<?php echo $nota["NOTA"] ?>" id="nota" name="nota" size="1">
+
+                            </td>
+                            <?php
+                        }
+                    } else {
+                        ?>
+                        <td>
+                            NOTA <input type="text" value="<?php echo $valor ?>" id="nota" name="nota" size="10">
+                        </td>
+                        <?php
+                    }
+                    ?>
                     <td>
-                        <br>
-                        NOTA <input type="text" value="${nota.nota}" id="nota" name="nota" size="1">
-                    </td>
-                    <td>
-                        <br>
-                        <input type="hidden" id="accion" name="accion" value="">
                         <input type="button" value="insertar" onclick="boton(1);"/>
                         <input type="button" value="borrar" onclick="boton(2);"/>
                         <input type="button" value="cambiar" onclick="boton(3);"/>
-                        <input type="button" value="actualizar" onclick="boton(4);"/>
+                        <input type="button" value="Ver Nota" onclick="boton(4);"/>
                     </td>
                 </tr>
             </table>
         </form>
         <!-----------------------Cliente Fin-------------------->
         <?php
-        $statement->null;
-        $alumnos->null;
-        $asignaturas->null;
-        $notas->null;
         $conn->disconnect();
         ?>
 
