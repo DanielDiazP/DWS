@@ -46,6 +46,7 @@ and open the template in the editor.
         $controllerId;
         $sql;
         $statement;
+        $foreign;
 
 
 
@@ -95,8 +96,12 @@ and open the template in the editor.
                 $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
                 $statement->execute();
                 }catch(PDOException $ex){
+                    if ($ex->getCode() == '23000') {
+                        $foreign = true; 
+                    }else{
                     echo "Fallo al borrar " . $ex->getMessage() ."<br>";
                     die();
+                    }
                 }
                 break;
 
@@ -111,6 +116,22 @@ and open the template in the editor.
                 }catch(PDOException $ex){
                     echo "Fallo al cambiar " . $ex->getMessage() ."<br>";
                     die();
+                }
+                break;
+             case "total":
+                try {
+                 $conn->beginTransaction();  
+                 
+                    $statement=$conn->query("DELETE FROM NOTAS WHERE ID_ASIGNATURA=:id");
+                    $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
+                   
+                    $statement=$conn->query("DELETE FROM ASIGNATURAS WHERE ID=:id");
+                    $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
+                    
+                    $conn->commit();
+                } catch (Exception $ex) {
+                    echo "Fallo al borrar todo";
+                    $conn->rollback();
                 }
                 break;
         }
@@ -151,6 +172,25 @@ and open the template in the editor.
             <input type="button" value="borrar" onclick="boton(2);"/>
             <input type="button" value="cambiar" onclick="boton(3);"/>
             </form>
+        
+         <?php
+        if ($foreign) {
+            ?>
+            <script>
+                var seguir = confirm("La asignatura seleccionada tiene nota \n¿Borrar?");
+                if (seguir === true) {
+                    document.getElementById("nombre").value =<?php echo $controllerNombre ?>;
+                    document.getElementById("idasignatura").value = <?php echo $controllerId ?>;
+                    document.getElementById("curso").value = <?php echo $controllerCurso ?>;
+                    document.getElementById("ciclo").value = <?php echo $controllerCiclo ?>;
+                    document.forms.formulario1.action = "asignaturasPdo.php?opcion=total";
+                    document.forms.formulario1.submit();
+                }
+            </script>
+
+            <?php
+        }
+        ?>
             <!-----------------------Cliente Fin-------------------->
                    <?php
                    $statement->null;

@@ -55,10 +55,10 @@ and open the template in the editor.
             $controllerOpcion = $_REQUEST["opcion"];
             $controllerEdad = $_REQUEST["edad"];
             $controllerNombre = $_REQUEST["nombre"];
-            try{
-            $dateController = new DateTime($_POST["fecha"]);
-            $controllerFecha = $dateController->format('Y-m-d');
-            } catch (Exception $e){
+            try {
+                $dateController = new DateTime($_POST["fecha"]);
+                $controllerFecha = $dateController->format('Y-m-d');
+            } catch (Exception $e) {
                 echo "Fallo al convertir la fecha";
             }
             if (isset($_REQUEST["idalumno"])) {
@@ -112,7 +112,19 @@ and open the template in the editor.
                 }
                 break;
             case "total":
-
+                try {
+                    mysqli_autocommit($conn, FALSE);
+                    $conn->query("DELETE FROM NOTAS WHERE ID_ALUMNO=?");
+                    $conn->bind_param('i', $controllerId);
+                   
+                    $conn->query("DELETE FROM ALUMNOS WHERE ID=?");
+                    $conn->bind_param('i', $controllerId);
+                    
+                    $conn->commit();
+                } catch (Exception $ex) {
+                    echo "Fallo al borrar todo";
+                    $conn->rollback();
+                }
                 break;
         }
         try {
@@ -125,24 +137,7 @@ and open the template in the editor.
         ?>
 
         <!-----------------------Cliente Inicio-------------------->
-        <?php
-        if ($foreign) {
-            ?>
-            <script>
-                var seguir = confirm("El alumno selecionado tiene nota \n¿Borrar?");
-                if (seguir === true) {
-                    document.getElementById("nombre").value =<?php echo $controllerNombre ?>;
-                    document.getElementById("idalumno").value = <?php echo $controllerId ?>;
-                    document.getElementById("fecha").value = <?php echo $controllerFecha ?>;
-                    document.getElementById("edad").value = <?php echo $controllerEdad ?>;
-                    document.forms.formulario1.action = "alumnosMysqli.php?opcion=total";
-                    document.forms.formulario1.submit();
-                }
-            </script>
 
-            <?php
-        }
-        ?>
 
         <table border=1 cellspacing=4 cellpadding=4>
             <?php
@@ -172,6 +167,24 @@ and open the template in the editor.
             <input type="button" value="borrar" onclick="boton(2);"/>
             <input type="button" value="cambiar" onclick="boton(3);"/>
         </form>
+        <?php
+        if ($foreign) {
+            ?>
+            <script>
+                var seguir = confirm("El alumno selecionado tiene nota \n¿Borrar?");
+                if (seguir === true) {
+                    document.getElementById("nombre").value =<?php echo $controllerNombre ?>;
+                    document.getElementById("idalumno").value = <?php echo $controllerId ?>;
+                    document.getElementById("fecha").value = <?php echo $controllerFecha ?>;
+                    document.getElementById("edad").value = <?php echo $controllerEdad ?>;
+                    document.forms.formulario1.action = "alumnosMysqli.php?opcion=total";
+                    document.forms.formulario1.submit();
+                }
+            </script>
+
+            <?php
+        }
+        ?>
         <!-----------------------Cliente Fin-------------------->
         <?php
         $statement->close();
