@@ -90,15 +90,16 @@ and open the template in the editor.
                     $statement = $conn->prepare("DELETE FROM ALUMNOS WHERE ID=?");
                     $statement->bind_param('i', $controllerId);
                     $statement->execute();
-                } catch (mysqli_sql_exception $ef) {
-                    if ($ef->getCode() == 'CODE FOR FK') {
-                        $foreign = true;
-                        echo "No se puede realizar la eliminacion del alumno, existe una fk";
-                    } else {
-                        $foreign = false;
-                    }
+//                } catch (mysqli_sql_exception $ef) {
+//                    if ($ef->getCode() == 1217) {
+//                        $foreign = true;
+//                        echo "No se puede realizar la eliminacion del alumno, existe una fk";
+//                    } else {
+//                        echo $ef->getCode();
+//                        $foreign = false;
+//                    }
                 } catch (Exception $ex) {
-                    echo "Fallo al borrar";
+                    echo "Fallo al borrar" . $ef;
                 }
                 break;
 

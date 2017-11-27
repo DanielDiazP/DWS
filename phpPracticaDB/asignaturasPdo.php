@@ -85,7 +85,7 @@ and open the template in the editor.
                 //$newId = $conn->lastInsertId(); para coger el auto incremental
                 }catch(PDOException $ex){
                     echo "Fallo al insertar " . $ex->getMessage() ."<br>";
-                    die();
+                   
                 }
                 
                 break;
@@ -100,7 +100,7 @@ and open the template in the editor.
                         $foreign = true; 
                     }else{
                     echo "Fallo al borrar " . $ex->getMessage() ."<br>";
-                    die();
+                    
                     }
                 }
                 break;
@@ -115,7 +115,7 @@ and open the template in the editor.
                 $statement->execute();
                 }catch(PDOException $ex){
                     echo "Fallo al cambiar " . $ex->getMessage() ."<br>";
-                    die();
+                    
                 }
                 break;
              case "total":
