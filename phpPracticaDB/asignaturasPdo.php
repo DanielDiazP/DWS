@@ -46,7 +46,7 @@ and open the template in the editor.
         $controllerId;
         $sql;
         $statement;
-        $foreign;
+        $foreign=null;
 
 
 
@@ -94,15 +94,17 @@ and open the template in the editor.
                 try{
                 $statement = $conn->prepare("DELETE FROM ASIGNATURAS WHERE ID= :id");
                 $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
-                $statement->execute();
+               if( $statement->execute()){
+                   
+               }else{
+                   if(strpos($statement->errorInfo()[2],"foreign")){
+                       $foreign=true;
+                   }
+               }
+                 
                 }catch(PDOException $ex){
-                    if ($ex->getCode() == '23000') {
-                        $foreign = true; 
-                    }else{
                     echo "Fallo al borrar " . $ex->getMessage() ."<br>";
-                    
                     }
-                }
                 break;
 
             case "update":
@@ -122,11 +124,11 @@ and open the template in the editor.
                 try {
                  $conn->beginTransaction();  
                  
-                    $statement=$conn->query("DELETE FROM NOTAS WHERE ID_ASIGNATURA=:id");
-                    $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
+                    $conn->query("DELETE FROM NOTAS WHERE ID_ASIGNATURA=:id");
+                    $conn->bindParam(":id", $controllerId, PDO::PARAM_INT);
                    
-                    $statement=$conn->query("DELETE FROM ASIGNATURAS WHERE ID=:id");
-                    $statement->bindParam(":id", $controllerId, PDO::PARAM_INT);
+                    $conn->query("DELETE FROM ASIGNATURAS WHERE ID=:id");
+                    $conn->bindParam(":id", $controllerId, PDO::PARAM_INT);
                     
                     $conn->commit();
                 } catch (Exception $ex) {

@@ -47,7 +47,7 @@ and open the template in the editor.
         $controllerId;
         $sql;
         $statement;
-        $foreign;
+        $foreign ;
 
 
         //----------------------Controller Inicio----------------------
@@ -89,15 +89,20 @@ and open the template in the editor.
                 try {
                     $statement = $conn->prepare("DELETE FROM ALUMNOS WHERE ID=?");
                     $statement->bind_param('i', $controllerId);
-                    $statement->execute();
-//                } catch (mysqli_sql_exception $ef) {
-//                    if ($ef->getCode() == 1217) {
-//                        $foreign = true;
-//                        echo "No se puede realizar la eliminacion del alumno, existe una fk";
-//                    } else {
-//                        echo $ef->getCode();
-//                        $foreign = false;
-//                    }
+
+                    if ($statement->execute()) {
+                        
+                    } else {
+                        $foreign = true;
+                        //$error= mysqli_error($conn);
+//                        echo mysqli_error($statement);
+//                        if($statement->errorno == 1451){
+//                              $foreign = true;
+//                        }
+//                        if (strpos($statement->error, 'foreign')) {
+//                            $foreign = true;
+//                        }
+                    }
                 } catch (Exception $ex) {
                     echo "Fallo al borrar" . $ef;
                 }
@@ -115,17 +120,18 @@ and open the template in the editor.
             case "total":
                 try {
                     mysqli_autocommit($conn, FALSE);
-                    $conn->query("DELETE FROM NOTAS WHERE ID_ALUMNO=?");
-                    $conn->bind_param('i', $controllerId);
-                   
-                    $conn->query("DELETE FROM ALUMNOS WHERE ID=?");
-                    $conn->bind_param('i', $controllerId);
-                    
+                    $statement = $conn->query("DELETE FROM NOTAS WHERE ID_ALUMNO=?");
+                    $statement->bind_param('i', $controllerId);
+
+                    $statement2 = $conn->query("DELETE FROM ALUMNOS WHERE ID=?");
+                    $statement2->bind_param('i', $controllerId);
+
                     $conn->commit();
                 } catch (Exception $ex) {
                     echo "Fallo al borrar todo";
                     $conn->rollback();
                 }
+                $foreign=false;
                 break;
         }
         try {
