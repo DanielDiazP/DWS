@@ -47,7 +47,7 @@ and open the template in the editor.
         $controllerId;
         $sql;
         $statement;
-        $foreign ;
+        $foreign = false;
 
 
         //----------------------Controller Inicio----------------------
@@ -93,18 +93,12 @@ and open the template in the editor.
                     if ($statement->execute()) {
                         
                     } else {
-                        $foreign = true;
-                        //$error= mysqli_error($conn);
-//                        echo mysqli_error($statement);
-//                        if($statement->errorno == 1451){
-//                              $foreign = true;
-//                        }
-//                        if (strpos($statement->error, 'foreign')) {
-//                            $foreign = true;
-//                        }
+                        if (strpos($statement->error, 'foreign')) {
+                            $foreign = true;
+                        }
                     }
                 } catch (Exception $ex) {
-                    echo "Fallo al borrar" . $ef;
+                    echo "Fallo al borrar";
                 }
                 break;
 
@@ -120,20 +114,22 @@ and open the template in the editor.
             case "total":
                 try {
                     mysqli_autocommit($conn, FALSE);
-                    $statement = $conn->query("DELETE FROM NOTAS WHERE ID_ALUMNO=?");
+                    $statement = $conn->prepare("DELETE FROM NOTAS WHERE ID_ALUMNO=?");
                     $statement->bind_param('i', $controllerId);
+                    $statement->execute();
 
-                    $statement2 = $conn->query("DELETE FROM ALUMNOS WHERE ID=?");
+                    $statement2 = $conn->prepare("DELETE FROM ALUMNOS WHERE ID=?");
                     $statement2->bind_param('i', $controllerId);
+                    $statement2->execute();
 
                     $conn->commit();
                 } catch (Exception $ex) {
                     echo "Fallo al borrar todo";
                     $conn->rollback();
                 }
-                $foreign=false;
                 break;
         }
+        mysqli_autocommit($conn, TRUE);
         try {
             $sql = "SELECT * FROM `ALUMNOS`";
             $result = $conn->query($sql);
@@ -178,9 +174,10 @@ and open the template in the editor.
         if ($foreign) {
             ?>
             <script>
-                var seguir = confirm("El alumno selecionado tiene nota \n¿Borrar?");
+                var seguir = null;
+                seguir = confirm("El alumno selecionado tiene nota \n¿Borrar?");
                 if (seguir === true) {
-                    document.getElementById("nombre").value =<?php echo $controllerNombre ?>;
+                    document.getElementById("nombre").value = "<?php echo $controllerNombre ?>";
                     document.getElementById("idalumno").value = <?php echo $controllerId ?>;
                     document.getElementById("fecha").value = <?php echo $controllerFecha ?>;
                     document.getElementById("edad").value = <?php echo $controllerEdad ?>;

@@ -55,7 +55,7 @@ and open the template in the editor.
         $sql;
         $statement;
         $notas;
-        $valor="introduce notas";
+        $valor = "introduce notas";
 
 
 
@@ -67,7 +67,7 @@ and open the template in the editor.
             $controllerIdAlumno = $_REQUEST["idAlumno"];
             $controllerIdAsignatura = $_REQUEST["idAsignatura"];
             $controllerNota = $_REQUEST["nota"];
-            $notas=null;
+            $notas = null;
         }
         //----------------------Controller Fin----------------------
         //-----------------------DAO Inicio----------------------------
@@ -85,54 +85,54 @@ and open the template in the editor.
 
         switch ($controllerOpcion) {
             case "insert":
-                try{
-                $parametros = Array("ID_ALUMNO" => $controllerIdAlumno, "ID_ASIGNATURA" => $controllerIdAsignatura, "NOTA" => $controllerNota);
-                $statement = $conn->insert("NOTAS", $parametros);
-                } catch (Exception $e){
+                try {
+                    $parametros = Array("ID_ALUMNO" => $controllerIdAlumno, "ID_ASIGNATURA" => $controllerIdAsignatura, "NOTA" => $controllerNota);
+                    $statement = $conn->insert("NOTAS", $parametros);
+                } catch (Exception $e) {
                     echo "error al insertar";
                 }
                 break;
 
             case "delete":
-                try{
-                $conn->where('ID_ALUMNO', $controllerIdAlumno);
-                $conn->where('ID_ASIGNATURA', $controllerIdAsignatura);
-                $statement = $conn->delete('NOTAS');
-                 } catch (Exception $e){
+                try {
+                    $conn->where('ID_ALUMNO', $controllerIdAlumno);
+                    $conn->where('ID_ASIGNATURA', $controllerIdAsignatura);
+                    $statement = $conn->delete('NOTAS');
+                } catch (Exception $e) {
                     echo "error al borrar";
                 }
                 break;
 
             case "update":
-                try{
-                $parametros = Array('NOTA' => $controllerNota);
-                $conn->where('ID_ALUMNO', $controllerIdAlumno);
-                $conn->where('ID_ASIGNATURA', $controllerIdAsignatura);
-                $statement = $conn->update('NOTAS', $parametros);
-                 } catch (Exception $e){
+                try {
+                    $parametros = Array('NOTA' => $controllerNota);
+                    $conn->where('ID_ALUMNO', $controllerIdAlumno);
+                    $conn->where('ID_ASIGNATURA', $controllerIdAsignatura);
+                    $statement = $conn->update('NOTAS', $parametros);
+                } catch (Exception $e) {
                     echo "error al actualizar";
                 }
                 break;
             case "select":
-                try{
-                $parametros = Array($controllerIdAlumno, $controllerIdAsignatura);
-                $notas = $conn->rawQuery("select * from NOTAS where ID_ALUMNO=? AND ID_ASIGNATURA=?", $parametros);
-                if($notas==null){
-                    $valor="no tiene notas";
-                }else{
-                    $valor="Introducir notas";
-                }
-                 } catch (Exception $e){
+                try {
+                    $parametros = Array($controllerIdAlumno, $controllerIdAsignatura);
+                    $notas = $conn->rawQuery("select * from NOTAS where ID_ALUMNO=? AND ID_ASIGNATURA=?", $parametros);
+                    if ($notas == null) {
+                        $valor = "no tiene notas";
+                    } else {
+                        $valor = "Introducir notas";
+                    }
+                } catch (Exception $e) {
                     echo "error al seleccionar";
                 }
                 break;
         }
-        try{
-        $alumnos = $conn->get('ALUMNOS');
-        $asignaturas = $conn->get('ASIGNATURAS');
-         } catch (Exception $e){
-                    echo "error al obtener el listado de alumnos/asigaturas";
-                }
+        try {
+            $alumnos = $conn->get('ALUMNOS');
+            $asignaturas = $conn->get('ASIGNATURAS');
+        } catch (Exception $e) {
+            echo "error al obtener el listado de alumnos/asigaturas";
+        }
         //-----------------------DAO Fin----------------------------
         ?>
 
