@@ -52,11 +52,21 @@ public class Asignaturas extends HttpServlet {
                     a.setId(Long.parseLong(request.getParameter("id")));
                     error = as.delAsignaturas(a);
                     request.setAttribute("hecho", error);
+                    if (error) {
+                        request.setAttribute("foreign", true);
+                        request.setAttribute("asignatura", a);
+                    } else {
+                        request.setAttribute("foreign", false);
+                    }
                     break;
                 case "update":
                     a.setId(Long.parseLong(request.getParameter("id")));
                     error = as.updAsignaturas(a);
                     request.setAttribute("hecho", error);
+                    break;
+                case "total":
+                    a.setId(Long.parseLong(request.getParameter("id")));
+                    as.total(a);
                     break;
             }
 

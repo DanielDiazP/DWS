@@ -35,4 +35,8 @@ public class AsignaturasServicios {
 
        return dao.deleteAsignatura(asignatura);
     }
+        public void total(Asignatura asignatura){
+        AsignaturasDAO dao = new AsignaturasDAO();
+        dao.total(asignatura);
+    }
 }

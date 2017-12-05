@@ -42,19 +42,7 @@
     </head>
     <body>
         <h1>ALUMNOS</h1>
-        <c:if test="${foreign != null}">
-            <script>
-                var seguir = confirm("${foreign}" + "\n¿Borrar?");
-                if (seguir === true) {
-                    document.getElementById("nombre").value = "${alumno.nombre}";
-                    document.getElementById("idalumno").value = "${alumno.id}";
-                    document.getElementById("fecha").value = "${fecha}";
-                    document.getElementById("edad").value = "${alumno.mayor_edad}";
-                    document.forms.formulario1.action = "alumnos?opcion=total";
-                    document.forms.formulario1.submit();
-                }
-            </script>
-        </c:if>
+
 
         <table border="1">
 
@@ -93,6 +81,19 @@
             <input type="button" value="borrar" onclick="boton(2);"/>
             <input type="button" value="cambiar" onclick="boton(3);"/>
         </form>
-
+        <c:if test="${foreign}">
+            <script>
+                var seguir = null;
+                seguir = confirm("El alumno selecionado tiene nota \n¿Borrar?");
+                if (seguir === true) {
+                    document.getElementById("nombre").value = "${alumno.nombre}";
+                    document.getElementById("idalumno").value = ${alumno.id};
+                    document.getElementById("fecha").value = '<fmt:formatDate value="${alumno.fecha_nacimiento}" pattern="dd-MM-yyyy"/>';
+                    document.getElementById("edad").value = ${alumno.mayor_edad};
+                    document.forms.formulario1.action = "alumnos?opcion=total";
+                    document.forms.formulario1.submit();
+                }
+            </script>
+        </c:if>
     </body>
 </html>

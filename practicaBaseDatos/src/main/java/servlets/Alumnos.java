@@ -80,8 +80,10 @@ public class Alumnos extends HttpServlet {
                     a.setId(id);
                     error = as.delAlumno(a);
                     if (error) {
-                        request.setAttribute("foreign", "Al borrar el alumno se borraran las notas");
+                        request.setAttribute("foreign", true);
                         request.setAttribute("alumno", a);
+                    }else{
+                        request.setAttribute("foreign", false);
                     }
                     break;
 

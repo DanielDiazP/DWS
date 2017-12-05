@@ -8,6 +8,7 @@ package dao;
 import model.Asignatura;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,11 +93,43 @@ public class AsignaturasDAO {
             qr.update(con, "DELETE FROM ASIGNATURAS WHERE ID=?", asignatura.getId());
 
         } catch (Exception ex) {
-            error = true;
+            if (ex.getMessage().contains("foreign key")) {
+                error = true;
+            }
             Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             db.cerrarConexion(con);
         }
         return error;
+    }
+
+    public void total(Asignatura asignatura) {
+        DBConnection db = new DBConnection();
+        Connection con = null;
+        try {
+            con = db.getConnection();
+            con.setAutoCommit(Boolean.FALSE);
+            QueryRunner qr = new QueryRunner();
+
+            qr.update(con,
+                    "DELETE FROM NOTAS WHERE ID_ASIGNATURA = ? ",
+                    asignatura.getId());
+            qr.update(con,
+                    "DELETE FROM ASIGNATURAS WHERE ID = ? ",
+                    asignatura.getId());
+
+            con.commit();
+        } catch (Exception ex) {
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException ex1) {
+                Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            db.cerrarConexion(con);
+        }
     }
 }

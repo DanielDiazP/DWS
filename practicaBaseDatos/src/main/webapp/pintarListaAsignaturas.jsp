@@ -62,5 +62,19 @@
             <input type="button" value="cambiar" onclick="boton(3);"/>
 
         </form>
+        <c:if test="${foreign}">
+            <script>
+                var seguir = null;
+                seguir = confirm("La asignatura tiene nota \n¿Borrar?");
+                if (seguir === true) {
+                    document.getElementById("nombre").value = "${asignatura.nombre}";
+                    document.getElementById("idasignatura").value = ${asignatura.id};
+                    document.getElementById("ciclo").value = '${asignatura.ciclo}';
+                    document.getElementById("curso").value = '${asignatura.curso}';
+                    document.forms.formulario1.action = "asignaturas?opcion=total";
+                    document.forms.formulario1.submit();
+                }
+            </script>
+        </c:if>
     </body>
 </html>
