@@ -12,6 +12,9 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 /**
  *
  * @author daw
@@ -33,6 +36,9 @@ public class DBConnection {
 
         return connection;
     }
+    
+    
+    
 
     public void cerrarConexion(Connection connection) {
         try {
