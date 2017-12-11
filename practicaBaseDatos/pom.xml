@@ -58,6 +58,11 @@
             <artifactId>spring-jdbc</artifactId>
             <version>5.0.1.RELEASE</version>
         </dependency>
+         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
     
 
