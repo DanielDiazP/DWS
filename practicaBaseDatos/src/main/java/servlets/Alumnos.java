@@ -6,14 +6,9 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +77,7 @@ public class Alumnos extends HttpServlet {
                     if (error) {
                         request.setAttribute("foreign", true);
                         request.setAttribute("alumno", a);
-                    }else{
+                    } else {
                         request.setAttribute("foreign", false);
                     }
                     break;

@@ -5,7 +5,8 @@
  */
 package model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 /**
  *
@@ -23,7 +24,7 @@ public class Usuario {
     private String codigoActivacion;
     private String email;
     private Boolean activado;
-    private Date fechaActivacion;
+    private LocalDateTime fechaActivacion;
 
     public long getId() {
         return id;
@@ -49,7 +50,7 @@ public class Usuario {
         return activado;
     }
 
-    public Date getFechaActivacion() {
+    public LocalDateTime getFechaActivacion() {
         return fechaActivacion;
     }
 
@@ -77,7 +78,7 @@ public class Usuario {
         this.activado = activado;
     }
 
-    public void setFechaActivacion(Date fechaActivacion) {
+    public void setFechaActivacion(LocalDateTime fechaActivacion) {
         this.fechaActivacion = fechaActivacion;
     }
 }

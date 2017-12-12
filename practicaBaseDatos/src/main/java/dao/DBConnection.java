@@ -5,7 +5,6 @@
  */
 package dao;
 
-
 import config.Configuration;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,22 +21,24 @@ import javax.sql.DataSource;
  * @author daw
  */
 public class DBConnection {
-  private static DBConnection dbconection = null;
-    
+
+    private static DBConnection dbconection = null;
+
     private final DataSource hikariDatasource;
-    
+
     private DBConnection() {
         hikariDatasource = getDataSourceHikari();
     }
-    
-    public static DBConnection getInstance(){
-        if (dbconection == null)
+
+    public static DBConnection getInstance() {
+        if (dbconection == null) {
             dbconection = new DBConnection();
-       
+        }
+
         return dbconection;
     }
-    
-     public Connection getConnection() throws Exception {
+
+    public Connection getConnection() throws Exception {
         Class.forName(Configuration.getInstance().getDriverDB());
         Connection connection;
 
@@ -45,16 +46,16 @@ public class DBConnection {
 
         return connection;
     }
-     
-     private DataSource getDataSourceHikari() {
+
+    private DataSource getDataSourceHikari() {
         HikariConfig config = new HikariConfig();
 
-        config.setJdbcUrl( Configuration.getInstance().getUrlDB());
+        config.setJdbcUrl(Configuration.getInstance().getUrlDB());
         config.setUsername(Configuration.getInstance().getUserDB());
-        config.setPassword( Configuration.getInstance().getPassDB());
+        config.setPassword(Configuration.getInstance().getPassDB());
         config.setDriverClassName(Configuration.getInstance().getDriverDB());
         config.setMaximumPoolSize(10);
-        
+
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -62,12 +63,10 @@ public class DBConnection {
         HikariDataSource datasource = new HikariDataSource(config);
         return datasource;
     }
-    
-     public DataSource getDataSource() {
-       return hikariDatasource;
+
+    public DataSource getDataSource() {
+        return hikariDatasource;
     }
-     
-     
 
 //    public Connection getConnection() throws Exception {
 //        Class.forName(Configuration.getInstance().getDriverDB());
@@ -80,10 +79,6 @@ public class DBConnection {
 //
 //        return connection;
 //    }
-    
-    
-    
-
     public void cerrarConexion(Connection connection) {
         try {
             if (connection != null) {

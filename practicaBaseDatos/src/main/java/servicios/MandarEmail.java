@@ -17,18 +17,14 @@ import org.apache.commons.mail.SimpleEmail;
  * @author Dani
  */
 public class MandarEmail {
-    
 
-
-
-public void mandarEmail(String to, String msg, String subject) {
+    public void mandarEmail(String to, String msg, String subject) {
         try {
             Email email = new SimpleEmail();
-            
+
             email.setHostName(Configuration.getInstance().getSmtpServer());
             email.setSmtpPort(Integer.parseInt(Configuration.getInstance().getSmtpPort()));
             email.setAuthentication(Configuration.getInstance().getMailFrom(), Configuration.getInstance().getMailPass());
-            //email.setSSLOnConnect(true);
             email.setStartTLSEnabled(true);
             email.setFrom("ningunSitio@gmail.com");
             email.setSubject(subject);
@@ -41,5 +37,5 @@ public void mandarEmail(String to, String msg, String subject) {
             Logger.getLogger(MandarEmail.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

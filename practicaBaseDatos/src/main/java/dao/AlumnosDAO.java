@@ -21,15 +21,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-
 /**
  *
  * @author daw
  */
 public class AlumnosDAO {
-    
-    
+
     public List<Alumno> selectAllAlumnos() {
         List<Alumno> lista = new ArrayList<>();
         DBConnection db = null;
@@ -82,7 +79,7 @@ public class AlumnosDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-             con = db.getInstance().getConnection();
+            con = db.getInstance().getConnection();
             stmt = con.prepareStatement("INSERT INTO ALUMNOS (NOMBRE,FECHA_NACIMIENTO,MAYOR_EDAD) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, alumno.getNombre());
@@ -142,18 +139,18 @@ public class AlumnosDAO {
                 Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, e);
             }
 
-           db.getInstance().cerrarConexion(con);
+            db.getInstance().cerrarConexion(con);
         }
         return error;
     }
 
     public boolean deleteAlumno(Alumno alumno) {
-         DBConnection db = null;
+        DBConnection db = null;
         Connection con = null;
         PreparedStatement stmt = null;
         boolean error = false;
         try {
-             con = db.getInstance().getConnection();
+            con = db.getInstance().getConnection();
             stmt = con.prepareStatement("DELETE FROM ALUMNOS WHERE ID=?");
             stmt.setLong(1, alumno.getId());
             stmt.executeUpdate();
@@ -175,13 +172,13 @@ public class AlumnosDAO {
                 Logger.getLogger(AlumnosDAO.class
                         .getName()).log(Level.SEVERE, null, e);
             }
-             db.getInstance().cerrarConexion(con);
+            db.getInstance().cerrarConexion(con);
         }
         return error;
     }
 
     public void total(Alumno alumno) {
-         DBConnection db = null;
+        DBConnection db = null;
         Connection con = null;
         PreparedStatement stmt = null;
         try {
@@ -212,18 +209,8 @@ public class AlumnosDAO {
         }
 
     }
-    
-    
-    
-    
-    
-    
-    
-    // ---------------sin pull -----------------
-    
-    
-    
 
+    // ---------------sin pull -----------------
 //    public List<Alumno> selectAllAlumnos() {
 //        List<Alumno> lista = new ArrayList<>();
 //        DBConnection db = new DBConnection();

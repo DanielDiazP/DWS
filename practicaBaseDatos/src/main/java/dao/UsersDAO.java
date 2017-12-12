@@ -5,47 +5,83 @@
  */
 package dao;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import model.Alumno;
 import model.Usuario;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 /**
  *
- * @author dani
+ * @author Dani
  */
+//----------JDBCTemplate--------
 public class UsersDAO {
 
-    public List<Usuario> getAllUsersJDBCTemplate() {
-
-        JdbcTemplate jtm = new JdbcTemplate(
-                DBConnection.getInstance().getDataSource());
-        List<Usuario> usuario = jtm.query("Select * from USERS",
-                new BeanPropertyRowMapper(Usuario.class));
-
-        return usuario;
-    }
-
+//    public List<Usuario> getAllUsersJDBCTemplate() {
+//
+//        JdbcTemplate jtm = new JdbcTemplate(
+//                DBConnection.getInstance().getDataSource());
+//        List<Usuario> usuario = jtm.query("Select * from USERS",
+//                new BeanPropertyRowMapper(Usuario.class));
+//
+//        return usuario;
+//    }
     public Usuario existenciaNombre(String nombre) {
         JdbcTemplate jtm = new JdbcTemplate(
                 DBConnection.getInstance().getDataSource());
 
         String SQL = "Select * from USERS where NOMBRE=?";
-        Usuario usuario =(Usuario) jtm.queryForObject(
-                SQL, new Object[] {nombre}, new BeanPropertyRowMapper(Usuario.class));
+        Usuario usuario = (Usuario) jtm.queryForObject(
+                SQL, new Object[]{nombre}, new BeanPropertyRowMapper(Usuario.class));
 
         return usuario;
     }
 
-    public Usuario addUserJDBCTemplate(Usuario usuario) {
+    public Usuario existenciaCodigo(String codigo) {
+        JdbcTemplate jtm = new JdbcTemplate(
+                DBConnection.getInstance().getDataSource());
+
+        String SQL = "Select * from USERS where CODIGO_ACTIVACION=?";
+        Usuario usuario = (Usuario) jtm.queryForObject(
+                SQL, new Object[]{codigo}, new BeanPropertyRowMapper(Usuario.class));
+
+        return usuario;
+    }
+
+    public Usuario comprobarPass(final String nombre, final String pass) {
+        JdbcTemplate jtm = new JdbcTemplate(
+                DBConnection.getInstance().getDataSource());
+
+        String SQL = "Select * from USERS where NOMBRE=? and PASSWORD=? and ACTIVO=1";
+        Usuario usuario = (Usuario) jtm.query(
+                SQL, new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setNString(1, nombre);
+                preparedStatement.setNString(2, pass);
+            }
+        }, new BeanPropertyRowMapper(Usuario.class));
+
+        return usuario;
+    }
+
+    public Usuario activar(String codigo) {
+        JdbcTemplate jtm = new JdbcTemplate(
+                DBConnection.getInstance().getDataSource());
+
+        String SQL = "INSERT INTO USERS (ACTIVO) VALUES(1) where CODIGO_ACTIVACION=?";
+        Usuario usuario = (Usuario) jtm.queryForObject(
+                SQL, new Object[]{codigo}, new BeanPropertyRowMapper(Usuario.class));
+
+        return usuario;
+    }
+
+    public Usuario addUser(Usuario usuario) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
                 DBConnection.getInstance().getDataSource()).withTableName("USERS").usingGeneratedKeyColumns("ID");
         Map<String, Object> parameters = new HashMap<String, Object>();

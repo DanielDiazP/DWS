@@ -7,32 +7,34 @@ package servicios;
 
 import dao.NotasDAO;
 import model.Nota;
+
 /**
  *
  * @author Dani
  */
 public class NotasServicios {
-     public Nota getNotas(Nota notas) {
+
+    public Nota getNotas(Nota notas) {
         NotasDAO dao = new NotasDAO();
 
         return dao.selectNota(notas);
     }
-     
+
     public Nota addNotas(Nota notas) {
         NotasDAO dao = new NotasDAO();
 
         return dao.insertNota(notas);
     }
-    
-     public boolean updNotas(Nota notas) {
+
+    public boolean updNotas(Nota notas) {
         NotasDAO dao = new NotasDAO();
 
-       return dao.updateNota(notas);
+        return dao.updateNota(notas);
     }
-     
-      public boolean delNotas(Nota notas) {
+
+    public boolean delNotas(Nota notas) {
         NotasDAO dao = new NotasDAO();
 
-       return dao.deleteNota(notas);
+        return dao.deleteNota(notas);
     }
 }

@@ -6,7 +6,6 @@
 package config;
 
 import freemarker.template.TemplateExceptionHandler;
-import java.io.File;
 import java.io.InputStream;
 import javax.servlet.ServletContext;
 import org.yaml.snakeyaml.Yaml;
@@ -58,7 +57,7 @@ public class Configuration {
     private String driverDB;
     private String userDB;
     private String passDB;
-        private String mailFrom;
+    private String mailFrom;
     private String smtpServer;
     private String smtpPort;
     private String mailPass;
@@ -104,7 +103,7 @@ public class Configuration {
     public void setPassDB(String passDB) {
         this.passDB = passDB;
     }
-    
+
     public String getMailFrom() {
         return mailFrom;
     }
