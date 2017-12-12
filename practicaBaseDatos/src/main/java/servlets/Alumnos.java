@@ -29,7 +29,7 @@ import servicios.AlumnosServicios;
  *
  * @author daw
  */
-@WebServlet(name = "Alumnos", urlPatterns = {"/alumnos"})
+@WebServlet(name = "Alumnos", urlPatterns = {"/secure/alumnos"})
 public class Alumnos extends HttpServlet {
 
     /**

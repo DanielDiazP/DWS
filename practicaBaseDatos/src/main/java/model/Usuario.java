@@ -17,7 +17,7 @@ public class Usuario {
 
     }
 
-    private int id;
+    private long id;
     private String nombre;
     private String password;
     private String codigoActivacion;
@@ -25,7 +25,7 @@ public class Usuario {
     private Boolean activado;
     private Date fechaActivacion;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -53,7 +53,7 @@ public class Usuario {
         return fechaActivacion;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

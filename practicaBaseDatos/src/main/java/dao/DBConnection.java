@@ -66,6 +66,8 @@ public class DBConnection {
      public DataSource getDataSource() {
        return hikariDatasource;
     }
+     
+     
 
 //    public Connection getConnection() throws Exception {
 //        Class.forName(Configuration.getInstance().getDriverDB());
@@ -78,7 +80,7 @@ public class DBConnection {
 //
 //        return connection;
 //    }
-//    
+    
     
     
 

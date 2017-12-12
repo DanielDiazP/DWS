@@ -19,7 +19,7 @@ import servicios.AsignaturasServicios;
  *
  * @author daw
  */
-@WebServlet(name = "Asignaturas", urlPatterns = {"/asignaturas"})
+@WebServlet(name = "Asignaturas", urlPatterns = {"/secure/asignaturas"})
 public class Asignaturas extends HttpServlet {
 
     /**
