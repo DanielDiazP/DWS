@@ -34,14 +34,14 @@ public class UsersDAO {
         return usuario;
     }
 
-    public Usuario existenciaNombre(Usuario nuevoUsuario) {
- JdbcTemplate jtm = new JdbcTemplate(
+    public Usuario existenciaNombre(String nombre) {
+        JdbcTemplate jtm = new JdbcTemplate(
                 DBConnection.getInstance().getDataSource());
-        List<Usuario> usuario = jtm.query("Select * from USERS where NOMBRE=?",
-                new BeanPropertyRowMapper(Usuario.class));
-        
-        
-        
+
+        String SQL = "Select * from USERS where NOMBRE=?";
+        Usuario usuario =(Usuario) jtm.queryForObject(
+                SQL, new Object[] {nombre}, new BeanPropertyRowMapper(Usuario.class));
+
         return usuario;
     }
 
