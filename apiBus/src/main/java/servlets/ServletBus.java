@@ -18,8 +18,12 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.GenericData;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,7 +47,7 @@ public class ServletBus extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, InterruptedException, ExecutionException {
 
         HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
         final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -52,11 +56,16 @@ public class ServletBus extends HttpServlet {
                     @Override
                     public void initialize(HttpRequest request) {
                         request.setParser(new JsonObjectParser(JSON_FACTORY));
+                        request.setConnectTimeout(100000);
                     }
                 });
-
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDateTime ahora = LocalDateTime.now();
+        String formatDateTime = ahora.format(formatter);
+        
         GenericData data = new GenericData();
-
+        
         GenericUrl genUrl;
         HttpRequest requestGoogle;
         GenericJson json;
@@ -65,6 +74,7 @@ public class ServletBus extends HttpServlet {
 
         data.put("idClient", "WEB.SERV.dany.8.2.91@gmail.com");
         data.put("passKey", "A56CBDF0-04A3-4DF7-9C3B-E1A1C3C410C0");
+        data.put("SelectDate",formatDateTime);
 
         if (request.getParameter("opcion") != null) {
 
@@ -73,15 +83,15 @@ public class ServletBus extends HttpServlet {
             switch (opcion) {
                 case "getListLines":
                     genUrl = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/bus/GetListLines.php");
-
-                    data.put("Lines", "");
+                    
+                    data.put("Lines", "");//put post / set get
 
                     requestGoogle = requestFactory.buildPostRequest(genUrl, new UrlEncodedContent(data));
-                    json = requestGoogle.execute().parseAs(GenericJson.class);
+                    json = requestGoogle.executeAsync().get().parseAs(GenericJson.class);
 
                     ArrayList lineas = (ArrayList) json.get("resultValues");
                     request.setAttribute("lineasBus", lineas);
-                    paginaSalida = "listaLineas.slt";
+                    paginaSalida = "inicio.jsp";
                     break;
 
                 case "getInfoLine":
@@ -89,13 +99,15 @@ public class ServletBus extends HttpServlet {
                         genUrl = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetInfoLine.php");
 
                         data.put("line", request.getParameter("numeroLinea"));
+                        data.put("cultureInfo", "ES");
 
                         requestGoogle = requestFactory.buildPostRequest(genUrl, new UrlEncodedContent(data));
-                        json = requestGoogle.execute().parseAs(GenericJson.class);
-
+                        json = requestGoogle.executeAsync().get().parseAs(GenericJson.class);
+                        GenericJson js =(GenericJson) json.get("Line");
+                        js.remove("dayType");
                         ArrayList infoLinea = (ArrayList) json.get("Line");
                         request.setAttribute("infoLineasBus", infoLinea);
-                        paginaSalida = "infoLineas.slt";
+                        paginaSalida = "infoLineas.jsp";
                     }
                     break;
 
@@ -106,7 +118,7 @@ public class ServletBus extends HttpServlet {
                         data.put("Lines", request.getParameter("numeroLinea"));
 
                         requestGoogle = requestFactory.buildPostRequest(genUrl, new UrlEncodedContent(data));
-                        json = requestGoogle.execute().parseAs(GenericJson.class);
+                        json = requestGoogle.executeAsync().get().parseAs(GenericJson.class);
 
                         ArrayList rutaLinea = (ArrayList) json.get("resultValues");
                         request.setAttribute("infoRutaLinea", rutaLinea);
@@ -131,7 +143,13 @@ public class ServletBus extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServletBus.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(ServletBus.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -145,7 +163,13 @@ public class ServletBus extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServletBus.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(ServletBus.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
