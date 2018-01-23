@@ -56,16 +56,16 @@ public class ServletBus extends HttpServlet {
                     @Override
                     public void initialize(HttpRequest request) {
                         request.setParser(new JsonObjectParser(JSON_FACTORY));
-                        request.setConnectTimeout(100000);
+                      //  request.setConnectTimeout(100000);
                     }
                 });
-        
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDateTime ahora = LocalDateTime.now();
         String formatDateTime = ahora.format(formatter);
-        
+
         GenericData data = new GenericData();
-        
+
         GenericUrl genUrl;
         HttpRequest requestGoogle;
         GenericJson json;
@@ -74,7 +74,7 @@ public class ServletBus extends HttpServlet {
 
         data.put("idClient", "WEB.SERV.dany.8.2.91@gmail.com");
         data.put("passKey", "A56CBDF0-04A3-4DF7-9C3B-E1A1C3C410C0");
-        data.put("SelectDate",formatDateTime);
+        data.put("SelectDate", formatDateTime);
 
         if (request.getParameter("opcion") != null) {
 
@@ -83,46 +83,51 @@ public class ServletBus extends HttpServlet {
             switch (opcion) {
                 case "getListLines":
                     genUrl = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/bus/GetListLines.php");
-                    
+
                     data.put("Lines", "");//put post / set get
 
                     requestGoogle = requestFactory.buildPostRequest(genUrl, new UrlEncodedContent(data));
-                    json = requestGoogle.executeAsync().get().parseAs(GenericJson.class);
+                    json = requestGoogle.execute().parseAs(GenericJson.class);
+                    //requestGoogle.executeAsync().get().parseAs(GenericJson.class);
 
                     ArrayList lineas = (ArrayList) json.get("resultValues");
                     request.setAttribute("lineasBus", lineas);
                     paginaSalida = "inicio.jsp";
                     break;
 
-                case "getInfoLine":
-                    if (request.getParameter("numeroLinea") != null) {
-                        genUrl = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetInfoLine.php");
+                case "getStopsLine":
+                    if (request.getParameter("numeroLinea") != null && request.getParameter("direccion") != null) {
+                        genUrl = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetStopsLine.php");
 
                         data.put("line", request.getParameter("numeroLinea"));
+                        data.put("direction", request.getParameter("direccion"));
                         data.put("cultureInfo", "ES");
 
                         requestGoogle = requestFactory.buildPostRequest(genUrl, new UrlEncodedContent(data));
-                        json = requestGoogle.executeAsync().get().parseAs(GenericJson.class);
-                        GenericJson js =(GenericJson) json.get("Line");
-                        js.remove("dayType");
-                        ArrayList infoLinea = (ArrayList) json.get("Line");
-                        request.setAttribute("infoLineasBus", infoLinea);
-                        paginaSalida = "infoLineas.jsp";
+                        json = requestGoogle.execute().parseAs(GenericJson.class);
+                        //requestGoogle.executeAsync().get().parseAs(GenericJson.class);
+                        
+                        ArrayList paradas = (ArrayList) json.get("stop");
+                        request.setAttribute("paradasLinea", paradas);
+                        paginaSalida = "paradas.jsp";
                     }
                     break;
 
-                case "getRouteLines":
-                    if (request.getParameter("numeroLinea") != null) {
-                        genUrl = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/bus/GetRouteLines.php");
+                case "getNodesLines":
+                    if (request.getParameter("parada") != null) {
+                        genUrl = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/bus/GetNodesLines.php");
 
-                        data.put("Lines", request.getParameter("numeroLinea"));
+                        data.put("Nodes",request.getParameter("parada"));
 
                         requestGoogle = requestFactory.buildPostRequest(genUrl, new UrlEncodedContent(data));
-                        json = requestGoogle.executeAsync().get().parseAs(GenericJson.class);
-
-                        ArrayList rutaLinea = (ArrayList) json.get("resultValues");
-                        request.setAttribute("infoRutaLinea", rutaLinea);
-                        paginaSalida = "infoRutas.slt";
+                        json = requestGoogle.execute().parseAs(GenericJson.class);
+                       
+                        
+                //requestGoogle.executeAsync().get().parseAs(GenericJson.class);
+                        Object resultadoParadas = json.get("resultValues");
+                      
+                        request.setAttribute("resultadoParadas", resultadoParadas);
+                        paginaSalida = "paradaEspecifica.jsp";
                     }
                     break;
             }
