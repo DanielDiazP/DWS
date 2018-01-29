@@ -11,15 +11,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Informacion de parada</title>
-        <script>
-            function funcion(a){
-                var regExp=/[,]+[0-9]{1,3}+[\/]/g;
-                return a.match(regExp);
-            }
-        </script>
+
     </head>
     <body>
         <h3>Parada ${resultadoParadas.name} Nº ${resultadoParadas.node} </h3>
-        <h4>Lineas <script>funcion(${resultadoParadas.lines});</script></h4>
+        <h4>Lineas ${resultadoParadas.lines}</script></h4>
     </body>
 </html>
