@@ -10,8 +10,7 @@ var output = document.getElementById("salida");
 
 function conectar() {
     
-
-    var websocket = new WebSocket(wsUri, +"/" + user.value + "/" + pass.value, []);
+    var websocket = new WebSocket(wsUri+"/" + user.value + "/" + pass.value);
 
     websocket.onopen = function () {
         
