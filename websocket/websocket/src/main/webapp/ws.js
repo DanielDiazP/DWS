@@ -6,25 +6,27 @@
 var wsUri = "ws://localhost:8080/websocket/endpoint";
 console.log("Connecting to " + wsUri);
 var idToken;
+var websocket;
 var output = document.getElementById("salida");
 
-function conectar() {
-    
-    var websocket = new WebSocket(wsUri+"/" + user.value + "/" + pass.value);
+function conectar(user,pass) {
+
+    websocket = new WebSocket(wsUri + "/" + user + "/" + pass);
 
     websocket.onopen = function () {
-        
-        writeToScreen("Conectado");
-        if (user.value == "google")
+
+        writeToScreen("Usuario "+ user +" conectado");
+        if (user == "google")
         {
             websocket.send(idToken);
         }
     };
+    
     websocket.onmessage = function (evt) {
         if (typeof evt.data == "string") {
-            writeToScreen("Recibido: " + evt.data);
+            writeToScreen("Recibido(texto): " + evt.data);
         } else {
-            writeToScreen("Recibido: " + evt.data);
+            writeToScreen("Recibido(binario): " + evt.data);
         }
     };
     websocket.onerror = function (evt) {
@@ -41,21 +43,22 @@ function conectar() {
 function enviarMensaje() {
     websocket.send(chat.value);
     writeToScreen("Enviado: " + chat.value);
+    chat.value=" ";
 }
 
 
 
 function writeToScreen(mensaje) {
-    var parrafo = document.createElement("p");
-    parrafo.innerHTML = mensaje;
-    output.appendChild(parrafo);
+//    var parrafo = document.createElement("p");
+//    parrafo.innerHTML = mensaje;
+//    output.appendChild(parrafo);
+    areaTexto.value=mensaje;
 }
 
 function onSignIn(googleUser) {
     idToken = googleUser.getAuthResponse().id_token;
     user.value = "google";
     pass.value = "google";
-    conectar();
 }
 function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
@@ -65,3 +68,8 @@ function signOut() {
     websocket.close();
 }
 
+
+
+if ($('input#guardar').is(':checked')) {
+
+}

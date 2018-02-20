@@ -27,12 +27,12 @@ public class ServerEndPoint {
     @OnOpen
     public void onOpen(Session session, @PathParam("user") String user, @PathParam("pass") String pass) {
         session.getUserProperties().put("user", user);
-        if (!user.equals("google")) {
-            session.getUserProperties().put("login",
-                    "OK");
-        } else {
+        if (user.equals("google")) {
             session.getUserProperties().put("login",
                     "NO");
+        } else {
+            session.getUserProperties().put("login",
+                    "OK");
         }
 
     }
@@ -58,11 +58,10 @@ public class ServerEndPoint {
             }
 
         } else {
-
-            for (Session s : sessionQueManda.getOpenSessions()) {
+            for (Session sesion : sessionQueManda.getOpenSessions()) {
                 try {
-                    if (!s.equals(sessionQueManda)) {
-                        s.getBasicRemote().sendText(sessionQueManda.getUserProperties().get("user") + " : " + mensaje);
+                    if (!sesion.equals(sessionQueManda)) {
+                        sesion.getBasicRemote().sendText(sessionQueManda.getUserProperties().get("user") + " : " + mensaje);
                     }
                 } catch (IOException e) {
                     Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, e);
