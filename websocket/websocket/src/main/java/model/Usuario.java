@@ -14,9 +14,19 @@ import java.util.ArrayList;
 
 public class Usuario {
     
+    private long id;
     private String user;
-    private ArrayList<String> productos;
+    private String pass;
+    private ArrayList<String> canales;
 
+     public long getId() {
+        return id;
+    }
+     
+     public void setId(long id) {
+        this.id = id;
+    }
+    
     public String getUser() {
         return user;
     }
@@ -24,18 +34,25 @@ public class Usuario {
     public void setUser(String user) {
         this.user = user;
     }
-
-    public ArrayList<String> getRoom() {
-        return productos;
+     public String getPass() {
+        return pass;
     }
 
-    public void setRoom(ArrayList<String> room) {
-        this.productos = room;
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public ArrayList<String> getCanal() {
+        return canales;
+    }
+
+    public void setCanal(ArrayList<String> canal) {
+        this.canales = canal;
     }
     
-    public boolean buscaRoom(String producto)
+    public boolean buscaCanal(String canal)
     {
-        return this.productos.contains(producto);
+        return this.canales.contains(canal);
     }
     
 }

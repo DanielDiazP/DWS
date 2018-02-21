@@ -5,6 +5,7 @@
  */
 package chat;
 
+import utils.IdTokenVerifierAndParser;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,5 +71,18 @@ public class ServerEndPoint {
         }
 
     }
+     @OnClose
+    public void onClose(Session session) {
+        for (Session s : session.getOpenSessions()) {
+            try {
+                System.out.println(s.getUserProperties().get("user"));
+                s.getBasicRemote().sendText("SALIDO " + session.getUserProperties().get("user").toString());
+            } catch (IOException ex) {
+                Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+   
+    
 
 }
