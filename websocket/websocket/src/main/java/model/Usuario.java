@@ -14,18 +14,10 @@ import java.util.ArrayList;
 
 public class Usuario {
     
-    private long id;
     private String user;
     private String pass;
-    private ArrayList<String> canales;
 
-     public long getId() {
-        return id;
-    }
      
-     public void setId(long id) {
-        this.id = id;
-    }
     
     public String getUser() {
         return user;
@@ -42,17 +34,17 @@ public class Usuario {
         this.pass = pass;
     }
 
-    public ArrayList<String> getCanal() {
-        return canales;
-    }
-
-    public void setCanal(ArrayList<String> canal) {
-        this.canales = canal;
-    }
-    
-    public boolean buscaCanal(String canal)
-    {
-        return this.canales.contains(canal);
-    }
+//    public ArrayList<String> getCanal() {
+//        return canales;
+//    }
+//
+//    public void setCanal(ArrayList<String> canal) {
+//        this.canales = canal;
+//    }
+//    
+//    public boolean buscaCanal(String canal)
+//    {
+//        return this.canales.contains(canal);
+//    }
     
 }

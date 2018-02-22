@@ -5,10 +5,41 @@
  */
 package model;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author Dani
  */
 public class Mensaje {
-    
+
+    private long id;
+    private String mensaje;
+    private LocalDateTime fecha;
+    private long id_canal;
+    private String nombre_user;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+        public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
 }

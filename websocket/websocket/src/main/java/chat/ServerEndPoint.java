@@ -16,6 +16,12 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import servicios.ChatServicios;
+import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import model.Usuario;
 
 /**
  *
@@ -29,11 +35,21 @@ public class ServerEndPoint {
     public void onOpen(Session session, @PathParam("user") String user, @PathParam("pass") String pass) {
         session.getUserProperties().put("user", user);
         if (user.equals("google")) {
-            session.getUserProperties().put("login",
-                    "NO");
+            session.getUserProperties().put("login", "NO");
         } else {
-            session.getUserProperties().put("login",
-                    "OK");
+            ChatServicios cS = new ChatServicios();
+            Usuario u = new Usuario();
+            u.setUser(user);
+            u.setPass(pass);
+            if (cS.registroCorrecto(u)) {
+                session.getUserProperties().put("login", "OK");
+            } else {
+                try {
+                    session.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
 
     }
@@ -42,7 +58,7 @@ public class ServerEndPoint {
     public void echoText(String mensaje, Session sessionQueManda) {
         if (!sessionQueManda.getUserProperties().get("login").equals("OK")) {
             try {
-                // comprobar login
+                //comprobacion del token de google
                 String idToken = mensaje;
                 GoogleIdToken.Payload payLoad = IdTokenVerifierAndParser.getPayload(idToken);
                 String name = (String) payLoad.get("name");
@@ -71,7 +87,8 @@ public class ServerEndPoint {
         }
 
     }
-     @OnClose
+
+    @OnClose
     public void onClose(Session session) {
         for (Session s : session.getOpenSessions()) {
             try {
@@ -82,7 +99,5 @@ public class ServerEndPoint {
             }
         }
     }
-   
-    
 
 }

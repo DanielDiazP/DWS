@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+
 /**
  *
  * @author Dani
@@ -31,20 +32,17 @@ public class ChatDao {
         return user;
     }
 
-    public Usuario nuevoUsuario(Usuario usuario) {
+    public int nuevoUsuario(Usuario usuario) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
-                DBConnection.getInstance().getDataSource()).withTableName("USERS").usingGeneratedKeyColumns("ID");
+                DBConnection.getInstance().getDataSource()).withTableName("USERS");
         Map<String, Object> parameters = new HashMap<>();
 
         parameters.put("NOMBRE", usuario.getUser());
         parameters.put("PASSWORD", usuario.getPass());
-        usuario.setId(jdbcInsert.executeAndReturnKey(parameters).longValue());
-
-        return usuario;
+        return jdbcInsert.execute(parameters);
     }
-    
 
-        public List<Canal> todosCanales() {
+    public List<Canal> todosCanales() {
 
         JdbcTemplate jtm = new JdbcTemplate(
                 DBConnection.getInstance().getDataSource());
@@ -53,13 +51,13 @@ public class ChatDao {
 
         return listaCanales;
     }
-    
+/// hasta aqui
     public Canal nuevoCanal(Canal canal) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
                 DBConnection.getInstance().getDataSource()).withTableName("CANALES").usingGeneratedKeyColumns("ID");
         Map<String, Object> parameters = new HashMap<>();
 
-        parameters.put("Nombre", canal.getCanal());
+        parameters.put("Nombre", canal.getNombre());
         canal.setId(jdbcInsert.executeAndReturnKey(parameters).longValue());
 
         return canal;
