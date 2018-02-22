@@ -34,12 +34,12 @@ public class Mensaje {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-        public String getUser() {
-        return user;
-    }
+//        public String getUser() {
+//      
+//    }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+//    public void setUser(String user) {
+//        this.user = user;
+//    }
 
 }

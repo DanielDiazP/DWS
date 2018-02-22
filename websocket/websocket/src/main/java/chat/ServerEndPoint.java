@@ -34,22 +34,23 @@ public class ServerEndPoint {
     @OnOpen
     public void onOpen(Session session, @PathParam("user") String user, @PathParam("pass") String pass) {
         session.getUserProperties().put("user", user);
-        if (user.equals("google")) {
+        if (user.equals("google@gmail.com")) {
             session.getUserProperties().put("login", "NO");
         } else {
-            ChatServicios cS = new ChatServicios();
-            Usuario u = new Usuario();
-            u.setUser(user);
-            u.setPass(pass);
-            if (cS.registroCorrecto(u)) {
+//            ChatServicios cS = new ChatServicios();
+//            Usuario u = new Usuario();
+//            u.setUser(user);
+//            //hasear la pass falta
+//            u.setPass(pass);
+//            if (cS.registroCorrecto(u)) {
                 session.getUserProperties().put("login", "OK");
-            } else {
-                try {
-                    session.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+//            } else {
+//                try {
+//                    session.close();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
         }
 
     }
