@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <meta name="google-signin-scope" content="profile email">
         <meta name="google-signin-client_id"
@@ -43,8 +43,8 @@
             #text{
                 margin-top: 4%;
                 height: 500px;
-                width: 80%;
-                margin-left: 8%;
+                width: 60%;
+                margin-left: 18%;
                 text-align: center;
             }
             #loginGoogle{
@@ -54,18 +54,24 @@
             }
             #logout{
                 display: none;
-                margin-left: 44%;
+                margin-left: 45%;
                 margin-top: 2%;
                 font-size: xx-large;
             }
-            
-            
+
+
             #guardar{
                 margin-left: 2%;
                 display: inline-block;
             }
             #text{
                 display: none;
+            }
+            #botonCarga{
+                margin-left: 3%;
+            }
+            #izquierda{
+                width: 30%;
             }
 
 
@@ -99,7 +105,12 @@
         </div>
 
         <div id="logout"> <a href="#" onclick="signOut();" >Sign out</a></div>
+        <div id="izquierda">
+            <input onclick="getCanales();" value="getCanales" type="button"> 
+            <select id="canales">
 
+            </select>
+        </div>
         <div id="text">
             <h3>Chat</h3>
             <div class="row">
@@ -120,22 +131,25 @@
                         <input type="checkbox" id="test5" onclick="guardarMensaje();" />
                         <label for="test5">Guardar Mensajes</label>
                     </p>
+                    <br>
+                    <input type="date" id="fecha1" style="width: 15%;display: inline-block; margin-top: 5%;">
+                    <input type="date" id="fecha2" style="width: 15%;display: inline-block;margin-left: 5%; margin-top: 5%;">
+                    <button onclick="cargarMensajes();" id="botonCarga" class="btn waves-effect waves-light" type="button" name="action">Cargar mensajes
+                    
+                    </button>
+
                 </form>
             </div>
         </div>
-        <div>
 
-
-
-
-        </div>
-
-        <div id="salida"></div>
-        <input type="text" class="datepicker">
-        <input type="text" class="datepicker">
-
-        <script language="javascript" type="text/javascript" src="ws.js">
-        </script>
-
+        
+        
+        <script type="text/javascript" src="js/lib/aes.js"></script>
+        <script type="text/javascript" src="js/lib/pbkdf2.js"></script>
+        <script type="text/javascript" src="js/AesUtil.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        
+<script language="javascript" type="text/javascript" src="ws.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     </body>
 </html>

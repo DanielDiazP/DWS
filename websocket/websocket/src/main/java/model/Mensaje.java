@@ -5,7 +5,7 @@
  */
 package model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -13,33 +13,84 @@ import java.time.LocalDateTime;
  */
 public class Mensaje {
 
-    private long id;
-    private String mensaje;
-    private LocalDateTime fecha;
+    private String tipo;
+
+    private String contenido;
+
+    private String key;
+
+    private String iv;
+
+    private String salt;
+
+    private String user;
+
     private long id_canal;
-    private String nombre_user;
 
-    public long getId() {
-        return id;
+    private Date fecha;
+
+    public String getUser() {
+        return user;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    public String getSalt() {
+        return salt;
     }
 
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
-//        public String getUser() {
-//      
-//    }
 
-//    public void setUser(String user) {
-//        this.user = user;
-//    }
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getIv() {
+        return iv;
+    }
+
+    public void setIv(String iv) {
+        this.iv = iv;
+    }
+
+    public long getCanal() {
+        return id_canal;
+    }
+
+    public void setCanal(long canal) {
+        this.id_canal = canal;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 
 }

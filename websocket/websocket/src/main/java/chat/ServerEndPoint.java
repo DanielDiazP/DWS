@@ -21,50 +21,64 @@ import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import java.security.spec.InvalidKeySpecException;
+import model.Mensaje;
+import model.MessageDecoder;
+import model.MessageEncoder;
 import model.Usuario;
+import servicios.PasswordServicios;
 
 /**
  *
  * @author Dani
  *
  */
-@ServerEndpoint("/endpoint/{user}/{pass}")
+@ServerEndpoint(
+        value = "/endpoint/{user}/{pass}",
+        decoders = MessageDecoder.class,
+        encoders = MessageEncoder.class)
 public class ServerEndPoint {
 
+    PasswordServicios ps = new PasswordServicios();
+    ChatServicios cS = new ChatServicios();
+    Usuario u;
+
     @OnOpen
-    public void onOpen(Session session, @PathParam("user") String user, @PathParam("pass") String pass) {
+    public void onOpen(Session session, @PathParam("user") String user, @PathParam("pass") String pass) throws InvalidKeySpecException {
         session.getUserProperties().put("user", user);
+
         if (user.equals("google@gmail.com")) {
             session.getUserProperties().put("login", "NO");
         } else {
-//            ChatServicios cS = new ChatServicios();
-//            Usuario u = new Usuario();
-//            u.setUser(user);
-//            //hasear la pass falta
-//            u.setPass(pass);
-//            if (cS.registroCorrecto(u)) {
+            u = new Usuario();
+            u.setUser(user);
+            u.setPass(ps.crearHash(pass));
+            if (cS.registroCorrecto(u)) {
                 session.getUserProperties().put("login", "OK");
-//            } else {
-//                try {
-//                    session.close();
-//                } catch (IOException ex) {
-//                    Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
+            } else {
+                try {
+                    session.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
-
     }
 
     @OnMessage
-    public void echoText(String mensaje, Session sessionQueManda) {
+    public void echoText(Mensaje mensaje, Session sessionQueManda) {
         if (!sessionQueManda.getUserProperties().get("login").equals("OK")) {
             try {
                 //comprobacion del token de google
-                String idToken = mensaje;
+                String idToken = mensaje.getContenido();
                 GoogleIdToken.Payload payLoad = IdTokenVerifierAndParser.getPayload(idToken);
                 String name = (String) payLoad.get("name");
                 sessionQueManda.getUserProperties().put("user", name);
                 System.out.println(payLoad.getJwtId());
+                u = new Usuario();
+                u.setUser("google@gmail.com");
+                u.setPass(("google"));
+                cS.registroNuevo(u);
                 sessionQueManda.getUserProperties().put("login", "OK");
             } catch (Exception ex) {
                 try {
