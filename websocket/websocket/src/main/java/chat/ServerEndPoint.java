@@ -39,7 +39,7 @@ import servicios.PasswordServicios;
         encoders = MessageEncoder.class)
 public class ServerEndPoint {
 
-    PasswordServicios ps = new PasswordServicios();
+   
     ChatServicios cS = new ChatServicios();
     Usuario u;
 
@@ -51,8 +51,8 @@ public class ServerEndPoint {
             session.getUserProperties().put("login", "NO");
         } else {
             u = new Usuario();
-            u.setUser(user);
-            u.setPass(ps.crearHash(pass));
+            u.setNombre(user);
+            u.setPass(pass);
             if (cS.registroCorrecto(u)) {
                 session.getUserProperties().put("login", "OK");
             } else {
@@ -76,7 +76,7 @@ public class ServerEndPoint {
                 sessionQueManda.getUserProperties().put("user", name);
                 System.out.println(payLoad.getJwtId());
                 u = new Usuario();
-                u.setUser("google@gmail.com");
+                u.setNombre("google@gmail.com");
                 u.setPass(("google"));
                 cS.registroNuevo(u);
                 sessionQueManda.getUserProperties().put("login", "OK");

@@ -14,17 +14,17 @@ import java.util.ArrayList;
 
 public class Usuario {
     
-    private String user;
+    private String nombre;
     private String pass;
 
      
     
-    public String getUser() {
-        return user;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setNombre(String user) {
+        this.nombre = user;
     }
      public String getPass() {
         return pass;

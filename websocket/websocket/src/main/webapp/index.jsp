@@ -82,7 +82,7 @@
 
 
         <div id="login">
-            <form action="" id="formularioUsuario"> 
+            <div action="" id="formularioUsuario"> 
                 <h3>Registrarse</h3>
                 <div class="row">
                     <div class="input-field col s12">
@@ -101,7 +101,7 @@
                 <div id="loginGoogle">
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
                 </div>
-            </form>
+            </div>
         </div>
 
         <div id="logout"> <a href="#" onclick="signOut();" >Sign out</a></div>
@@ -116,7 +116,7 @@
             <div class="row">
                 <textarea rows="40" cols="50" id="areaTexto"
                           style="resize: none;" readonly></textarea>
-                <form class="col s12">
+                <div class="col s12">
                     <div class="row">
                         <div class="input-field col s12" >
                             <i class="material-icons prefix">mode_edit</i>
@@ -138,7 +138,7 @@
                     
                     </button>
 
-                </form>
+                </div>
             </div>
         </div>
 

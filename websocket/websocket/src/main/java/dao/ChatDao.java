@@ -5,6 +5,7 @@
  */
 package dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-
 /**
  *
  * @author Dani
@@ -25,27 +25,29 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 public class ChatDao {
 
     public Usuario datosUsuario(Usuario usuario) {
-        try{
-        JdbcTemplate jtm = new JdbcTemplate(
-                DBConnection.getInstance().getDataSource());
+        Usuario user=null;
+        try {
+            JdbcTemplate jtm = new JdbcTemplate(
+                    DBConnection.getInstance().getDataSource());
 
-        String SQL = "Select * from registro where nombre=? and pass=?";
-        Usuario user = (Usuario) jtm.queryForObject(
-                SQL, new Object[]{usuario.getUser(), usuario.getPass()}, new BeanPropertyRowMapper(Usuario.class));
+            String SQL = "Select * from registro where nombre=?";
+            user = (Usuario)jtm.queryForObject(
+                SQL, new Object[]{usuario.getNombre()}, new BeanPropertyRowMapper(Usuario.class));
+            
 
+        } catch (Exception e) {
+            Logger.getLogger(ChatDao.class.getName()).log(Level.SEVERE, null, e);
+        }
         return user;
-        }catch(Exception e){
-                Logger.getLogger(ChatDao.class.getName()).log(Level.SEVERE, null, e);
-                }
-        return usuario;
     }
+    
 
     public int nuevoUsuario(Usuario usuario) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
                 DBConnection.getInstance().getDataSource()).withTableName("registro");
         Map<String, Object> parametros = new HashMap<>();
 
-        parametros.put("nombre", usuario.getUser());
+        parametros.put("nombre", usuario.getNombre());
         parametros.put("pass", usuario.getPass());
         return jdbcInsert.execute(parametros);
     }
@@ -60,7 +62,7 @@ public class ChatDao {
         return listaCanales;
     }
 /// hasta aqui
-    
+
 //    public int nuevoMensaje(Mensaje mensaje){
 //        SimpleJdbcInsert jdbcInsert=new SimpleJdbcInsert(DBConnection.getInstance().getDataSource()).withTableName("MENSAJES");
 //        Map<String,Object>  parametros=new HashMap<>();
@@ -75,8 +77,6 @@ public class ChatDao {
 //        
 //        
 //    }
-    
-    
     public Canal nuevoCanal(Canal canal) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
                 DBConnection.getInstance().getDataSource()).withTableName("CANALES").usingGeneratedKeyColumns("ID");
