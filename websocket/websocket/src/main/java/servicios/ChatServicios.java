@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Mensaje;
 import utils.PasswordHash;
 
 /**
@@ -49,5 +50,10 @@ public class ChatServicios {
     public boolean registroNuevo(Usuario user) {
         ChatDao dao = new ChatDao();
         return dao.nuevoUsuario(user) > 0;
+    }
+    
+    public void guardarMensaje(Mensaje mensaje){
+        ChatDao dao = new ChatDao();
+        dao.guardarMensaje(mensaje);
     }
 }

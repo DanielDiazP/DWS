@@ -12,76 +12,48 @@ import java.util.Date;
  * @author Dani
  */
 public class Mensaje {
+    
+    private long id;
 
-    private String tipo;
+    private String mensaje;
 
-    private String contenido;
-
-    private String key;
-
-    private String iv;
-
-    private String salt;
-
-    private String user;
+    private String nombre_user;
 
     private long id_canal;
 
     private Date fecha;
+    
+    private String tipo;
 
-    public String getUser() {
-        return user;
+      public long getId() {
+        return id;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setId(long id) {
+        this.id = id;
+    }  
+    
+    public String getNombre_user() {
+        return nombre_user;
     }
 
-    public String getSalt() {
-        return salt;
+    public void setNombre_user(String user) {
+        this.nombre_user = user;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public String getMensaje() {
+        return mensaje;
     }
 
-    public String getTipo() {
-        return tipo;
+    public void setMensaje(String contenido) {
+        this.mensaje = contenido;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getContenido() {
-        return contenido;
-    }
-
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getIv() {
-        return iv;
-    }
-
-    public void setIv(String iv) {
-        this.iv = iv;
-    }
-
-    public long getCanal() {
+    public long getId_canal() {
         return id_canal;
     }
 
-    public void setCanal(long canal) {
+    public void setId_canal(long canal) {
         this.id_canal = canal;
     }
 
@@ -92,5 +64,15 @@ public class Mensaje {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+    
+    public String getTipo() {
+        return tipo;
+    }
+    
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }  
+    
+    
 
 }

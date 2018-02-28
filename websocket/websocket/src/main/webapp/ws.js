@@ -7,24 +7,22 @@ var wsUri = "ws://localhost:8080/websocket/endpoint";
 console.log("Connecting to " + wsUri);
 var idToken;
 var websocket;
-var iterationCount = 1000;
-var keySize = 128;
-var aesUtil = new AesUtil(keySize, iterationCount);
 var user;
 var canal = 0;
 
 
+
 function conectar(email, password) {
 
-    websocket = new WebSocket(wsUri + "/" + email + "/" + password);
+    websocket = new WebSocket(wsUri + "/" + email + "/" + password, []);
     user = email;
     websocket.onopen = function () {
         if (email == "google@gmail.com") {
 
             var object = {
-                "user": user,
+                "nombre_user": user,
                 "tipo": "texto",
-                "contenido": idToken
+                "mensaje": idToken
             };
 
             websocket.send(JSON.stringify(object));
@@ -36,24 +34,23 @@ function conectar(email, password) {
     };
 
     websocket.onmessage = function (evt) {
-        var mensaje = JSON.parse(evt.data);
-        var texto = aesUtil.decrypt(mensaje.salt, mensaje.iv, mensaje.key, mensaje.contenido);
+        var texto = JSON.parse(evt.data);
+        
 
-        switch (mensaje.tipo) {
+        switch (texto.tipo) {
             case "texto":
-                writeToScreen("Recibido: " + texto);
+                writeToScreen("Recibido: " + texto.mensaje);
                 break;
             case "canales":
-                var canales = JSON.parse(texto);
+                var canales = JSON.parse(texto.mensaje);
                 for (var canal in canales) {
                     $("#canales").append(new Option(canales[canal], canales[canal]));
                 }
-                writeToScreen("Recibido: " + texto);
+                writeToScreen("Recibido: " + texto);//
 
                 break;
         }
-        writeToScreen("Recibido: " + texto);
-
+        
     };
     websocket.onerror = function (evt) {
         writeToScreen('ERROR: ' + evt.data);
@@ -66,10 +63,9 @@ function conectar(email, password) {
 
 
 function getCanales() {
-    var iv = CryptoJS.lib.WordArray.random(128 / 8).toString(CryptoJS.enc.Hex);
-    var salt = CryptoJS.lib.WordArray.random(128 / 8).toString(CryptoJS.enc.Hex);
+   
 
-    var passphrase = "temp";
+    
 
     var object = {
 
@@ -86,24 +82,30 @@ function getCanales() {
 }
 
 function enviarMensaje(canal) {
-    var iv = CryptoJS.lib.WordArray.random(128 / 8).toString(CryptoJS.enc.Hex);
-    var salt = CryptoJS.lib.WordArray.random(128 / 8).toString(CryptoJS.enc.Hex);
-    var passphrase = "temp";
-    var texto = aesUtil.encrypt(salt, iv, passphrase, icon_prefix2.value);
-
-    writeToScreen("Enviado(canal " + canal + "): " + aesUtil.decrypt(salt, iv, passphrase, texto));
+   
+    var texto = icon_prefix2.value;
+    var fecha;
+    if(document.getElementById("test5").checked){
+    fecha=Date.now();
+    }
+    
+    writeToScreen("Enviado(canal " + canal + "): " + texto);
     var object = {
         "tipo": "texto",
-        "contenido": texto,
-        "key": passphrase,
-        "iv": iv,
-        "salt": salt,
-        "user": user,
-        "canal": canal,
+        "mensaje": texto,
+        "nombre_user": user,
+        "id_canal": canal,
         "fecha": fecha
     };
     websocket.send(JSON.stringify(object));
     icon_prefix2.value = " ";
+}
+function cargarMensajes(){
+    var object={
+        "fecha1":fecha1,
+        "fecha2":fecha2
+
+    }
 }
 
 
@@ -130,16 +132,4 @@ function signOut() {
 }
 
 
-
-//if ($('input#guardar').is(':checked')) {
-//
-//}
-$('.datepicker').datepicker({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 15, // Creates a dropdown of 15 years to control year,
-    today: 'Today',
-    clear: 'Clear',
-    close: 'Ok',
-    closeOnSelect: false // Close upon selecting a date,
-});
  

@@ -61,22 +61,19 @@ public class ChatDao {
 
         return listaCanales;
     }
-/// hasta aqui
 
-//    public int nuevoMensaje(Mensaje mensaje){
-//        SimpleJdbcInsert jdbcInsert=new SimpleJdbcInsert(DBConnection.getInstance().getDataSource()).withTableName("MENSAJES");
-//        Map<String,Object>  parametros=new HashMap<>();
-//        
-//        parametros.put(key, this);
-//        parametros.put(key, this);
-//        parametros.put(key, this);
-//        parametros.put(key, this);
-//        parametros.put(key, this);
-//        parametros.put(key, this);
-//        
-//        
-//        
-//    }
+
+    public void guardarMensaje(Mensaje mensaje){
+        SimpleJdbcInsert jdbcInsert=new SimpleJdbcInsert(DBConnection.getInstance().getDataSource()).withTableName("mensajes");
+        Map<String,Object>  parametros=new HashMap<>();
+        
+        parametros.put("mensaje", mensaje.getMensaje());
+        parametros.put("fecha", mensaje.getFecha());
+        parametros.put("id_canal", mensaje.getId_canal());
+        parametros.put("nombre_user", mensaje.getNombre_user());
+        jdbcInsert.execute(parametros);
+    }
+    /// hasta aqui
     public Canal nuevoCanal(Canal canal) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
                 DBConnection.getInstance().getDataSource()).withTableName("CANALES").usingGeneratedKeyColumns("ID");

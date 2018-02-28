@@ -22,6 +22,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import java.security.spec.InvalidKeySpecException;
+import javax.websocket.EncodeException;
 import model.Mensaje;
 import model.MessageDecoder;
 import model.MessageEncoder;
@@ -70,15 +71,11 @@ public class ServerEndPoint {
         if (!sessionQueManda.getUserProperties().get("login").equals("OK")) {
             try {
                 //comprobacion del token de google
-                String idToken = mensaje.getContenido();
+                String idToken = mensaje.getMensaje();
                 GoogleIdToken.Payload payLoad = IdTokenVerifierAndParser.getPayload(idToken);
                 String name = (String) payLoad.get("name");
                 sessionQueManda.getUserProperties().put("user", name);
                 System.out.println(payLoad.getJwtId());
-                u = new Usuario();
-                u.setNombre("google@gmail.com");
-                u.setPass(("google"));
-                cS.registroNuevo(u);
                 sessionQueManda.getUserProperties().put("login", "OK");
             } catch (Exception ex) {
                 try {
@@ -90,10 +87,17 @@ public class ServerEndPoint {
             }
 
         } else {
+            if(mensaje.getFecha()!=null){
+                cS.guardarMensaje(mensaje);
+            }
             for (Session sesion : sessionQueManda.getOpenSessions()) {
                 try {
                     if (!sesion.equals(sessionQueManda)) {
-                        sesion.getBasicRemote().sendText(sessionQueManda.getUserProperties().get("user") + " : " + mensaje);
+                        try {
+                            sesion.getBasicRemote().sendObject(mensaje);
+                        } catch (EncodeException ex) {
+                            Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 } catch (IOException e) {
                     Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, e);

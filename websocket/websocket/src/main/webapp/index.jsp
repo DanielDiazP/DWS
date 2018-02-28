@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
+
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-        
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <meta name="google-signin-scope" content="profile email">
         <meta name="google-signin-client_id"
@@ -82,7 +82,7 @@
 
 
         <div id="login">
-            <div action="" id="formularioUsuario"> 
+            <div id="formularioUsuario"> 
                 <h3>Registrarse</h3>
                 <div class="row">
                     <div class="input-field col s12">
@@ -96,8 +96,8 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="conectar(email.value, password.value);" class="btn waves-effect waves-light" id="enviar" type="button" name="action">Entrar
-                </button>
+                <input onclick="conectar(email.value, password.value);" class="btn waves-effect waves-light" id="enviar" type="button" name="action" value="Entrar">
+               
                 <div id="loginGoogle">
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
                 </div>
@@ -106,7 +106,7 @@
 
         <div id="logout"> <a href="#" onclick="signOut();" >Sign out</a></div>
         <div id="izquierda">
-            <input onclick="getCanales();" value="getCanales" type="button"> 
+            <input onclick="getCanales();" value="Canales" type="button"> 
             <select id="canales">
 
             </select>
@@ -124,32 +124,29 @@
                             <label for="icon_prefix2">Mensaje</label>
                         </div>
                     </div>
-                    <button onclick="enviarMensaje();" id="botonTexto" class="btn waves-effect waves-light" type="button" name="action">Enviar
-                        <i class="material-icons right">send</i>
-                    </button>
+                    <input onclick="enviarMensaje();" id="botonTexto" class="btn waves-effect waves-light" type="button" name="action" value="Enviar">
+                   
                     <p id="guardar">
-                        <input type="checkbox" id="test5" onclick="guardarMensaje();" />
+                        <input type="checkbox" id="test5" />
                         <label for="test5">Guardar Mensajes</label>
                     </p>
                     <br>
                     <input type="date" id="fecha1" style="width: 15%;display: inline-block; margin-top: 5%;">
                     <input type="date" id="fecha2" style="width: 15%;display: inline-block;margin-left: 5%; margin-top: 5%;">
-                    <button onclick="cargarMensajes();" id="botonCarga" class="btn waves-effect waves-light" type="button" name="action">Cargar mensajes
+                    <input onclick="cargarMensajes();" id="botonCarga" class="btn waves-effect waves-light" type="button" name="action" value="Cargar mensajes">
+
                     
-                    </button>
 
                 </div>
             </div>
         </div>
 
-        
-        
-        <script type="text/javascript" src="js/lib/aes.js"></script>
-        <script type="text/javascript" src="js/lib/pbkdf2.js"></script>
-        <script type="text/javascript" src="js/AesUtil.js"></script>
+
+
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        
-<script language="javascript" type="text/javascript" src="ws.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+        <script language="javascript" type="text/javascript" src="ws.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     </body>
 </html>
