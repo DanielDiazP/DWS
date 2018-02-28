@@ -10,6 +10,8 @@ import model.Usuario;
 import dao.ChatDao;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Mensaje;
@@ -56,4 +58,11 @@ public class ChatServicios {
         ChatDao dao = new ChatDao();
         dao.guardarMensaje(mensaje);
     }
+    
+     public List<Mensaje> cargarMensaje(Mensaje mensaje){
+        ChatDao dao = new ChatDao();
+        return dao.cargarMensaje(mensaje);
+    }
+    
+    
 }

@@ -23,6 +23,8 @@ public class Mensaje {
 
     private Date fecha;
     
+    private Date fecha2;
+    
     private String tipo;
 
       public long getId() {
@@ -63,6 +65,14 @@ public class Mensaje {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+    
+     public Date getFecha2() {
+        return fecha2;
+    }
+
+    public void setFecha2(Date fecha) {
+        this.fecha2 = fecha;
     }
     
     public String getTipo() {

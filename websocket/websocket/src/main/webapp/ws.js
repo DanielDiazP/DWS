@@ -35,11 +35,13 @@ function conectar(email, password) {
 
     websocket.onmessage = function (evt) {
         var texto = JSON.parse(evt.data);
-        
+
 
         switch (texto.tipo) {
             case "texto":
-                writeToScreen("Recibido: " + texto.mensaje);
+                for (var objeto of texto) {
+                    writeToScreen("Recibido: " + objeto.mensaje);
+                }
                 break;
             case "canales":
                 var canales = JSON.parse(texto.mensaje);
@@ -50,7 +52,7 @@ function conectar(email, password) {
 
                 break;
         }
-        
+
     };
     websocket.onerror = function (evt) {
         writeToScreen('ERROR: ' + evt.data);
@@ -63,9 +65,9 @@ function conectar(email, password) {
 
 
 function getCanales() {
-   
 
-    
+
+
 
     var object = {
 
@@ -82,13 +84,13 @@ function getCanales() {
 }
 
 function enviarMensaje(canal) {
-   
+
     var texto = icon_prefix2.value;
     var fecha;
-    if(document.getElementById("test5").checked){
-    fecha=Date.now();
+    if (document.getElementById("test5").checked) {
+        fecha = Date.now();
     }
-    
+
     writeToScreen("Enviado(canal " + canal + "): " + texto);
     var object = {
         "tipo": "texto",
@@ -100,12 +102,17 @@ function enviarMensaje(canal) {
     websocket.send(JSON.stringify(object));
     icon_prefix2.value = " ";
 }
-function cargarMensajes(){
-    var object={
-        "fecha1":fecha1,
-        "fecha2":fecha2
 
-    }
+function cargarMensajes() {
+    var fecha1=document.getElementById("fecha1");
+    var fecha2=document.getElementById("fecha2");
+    
+    var object = {
+        "fecha": fecha1.value,
+        "fecha2": fecha2.value,
+        "nombre_user": user
+    };
+    websocket.send(JSON.stringify(object));
 }
 
 

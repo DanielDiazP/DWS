@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -97,7 +98,7 @@
                     </div>
                 </div>
                 <input onclick="conectar(email.value, password.value);" class="btn waves-effect waves-light" id="enviar" type="button" name="action" value="Entrar">
-               
+
                 <div id="loginGoogle">
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
                 </div>
@@ -125,17 +126,20 @@
                         </div>
                     </div>
                     <input onclick="enviarMensaje();" id="botonTexto" class="btn waves-effect waves-light" type="button" name="action" value="Enviar">
-                   
+
                     <p id="guardar">
                         <input type="checkbox" id="test5" />
                         <label for="test5">Guardar Mensajes</label>
                     </p>
                     <br>
-                    <input type="date" id="fecha1" style="width: 15%;display: inline-block; margin-top: 5%;">
+                    <input type="date" id="fecha1" placeholder="YYYY-MM-DD" style="width: 15%;display: inline-block; margin-top: 5%;">
                     <input type="date" id="fecha2" style="width: 15%;display: inline-block;margin-left: 5%; margin-top: 5%;">
                     <input onclick="cargarMensajes();" id="botonCarga" class="btn waves-effect waves-light" type="button" name="action" value="Cargar mensajes">
+                    <form action="servletConectados">
 
-                    
+                        <button class="btn waves-effect waves-light" type="submit" name="action" >Usuarios conectados
+                        </button>
+                    </form>
 
                 </div>
             </div>

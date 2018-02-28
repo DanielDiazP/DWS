@@ -73,6 +73,23 @@ public class ChatDao {
         parametros.put("nombre_user", mensaje.getNombre_user());
         jdbcInsert.execute(parametros);
     }
+    
+    public List<Mensaje> cargarMensaje(Mensaje mensaje) {
+        List<Mensaje> mensajes=null;
+        try {
+            JdbcTemplate jtm = new JdbcTemplate(
+                    DBConnection.getInstance().getDataSource());
+
+            String SQL = "Select * from mensajes right join canales where mensajes.fecha between CAST(? AS DATE) AND CAST(? AS DATE) on canales.id=?";
+            List<Mensaje> peticion = (List<Mensaje>) jtm.queryForObject(
+                SQL, new Object[]{mensaje.getFecha(),mensaje.getFecha2(),mensaje.getId_canal()}, new BeanPropertyRowMapper(Mensaje.class));
+            mensajes=peticion;
+
+        } catch (Exception e) {
+            Logger.getLogger(ChatDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+      return mensajes;
+    }
     /// hasta aqui
     public Canal nuevoCanal(Canal canal) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
