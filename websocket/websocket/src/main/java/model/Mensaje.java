@@ -5,7 +5,9 @@
  */
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -26,6 +28,12 @@ public class Mensaje {
     private Date fecha2;
     
     private String tipo;
+    
+    private String canalActual;
+    
+    private String canalNuevo;//nombre del canal para crear
+    
+    private ArrayList<String> nombre;//lista de nombres de los canales
 
       public long getId() {
         return id;
@@ -83,6 +91,27 @@ public class Mensaje {
         this.tipo = tipo;
     }  
     
+    public String getCanalNuevo() {
+        return canalNuevo;
+    }
+
+    public void setCanalNuevo(String canal) {
+        this.canalNuevo = canal;
+    }
     
+      public List<String> getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(ArrayList<String> lista) {
+        this.nombre = lista;
+    }  
+    public String getCanalActual() {
+        return canalActual;
+    }
+
+    public void setCanalActual(String canal) {
+        this.canalActual = canal;
+    }
 
 }

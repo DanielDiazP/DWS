@@ -13,8 +13,8 @@ public class Canal {
 
     private long id;
     private String nombre;
-    private String admin;
-    private String clave;
+    private String user_admin;
+   
 
     public long getId() {
         return id;
@@ -32,19 +32,13 @@ public class Canal {
         this.nombre = nombre;
     }
 
-    public String getAdmin() {
-        return admin;
+    public String getUser_admin() {
+        return user_admin;
     }
 
-    public void setAdmin(String admin) {
-        this.admin = admin;
+    public void setUser_admin(String admin) {
+        this.user_admin = admin;
     }
 
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
+    
 }

@@ -106,12 +106,8 @@
         </div>
 
         <div id="logout"> <a href="#" onclick="signOut();" >Sign out</a></div>
-        <div id="izquierda">
-            <input onclick="getCanales();" value="Canales" type="button"> 
-            <select id="canales">
 
-            </select>
-        </div>
+
         <div id="text">
             <h3>Chat</h3>
             <div class="row">
@@ -136,10 +132,14 @@
                     <input type="date" id="fecha2" style="width: 15%;display: inline-block;margin-left: 5%; margin-top: 5%;">
                     <input onclick="cargarMensajes();" id="botonCarga" class="btn waves-effect waves-light" type="button" name="action" value="Cargar mensajes">
                     <form action="servletConectados">
-
                         <button class="btn waves-effect waves-light" type="submit" name="action" >Usuarios conectados
                         </button>
                     </form>
+                    <input onclick="getCanales();" value="Canales" type="button">
+                    <input onclick="crearCanal();" value="Crear canal" type="button"> 
+                    <select id="canales" onchange="cambiarCanal(this.options[this.selectedIndex].innerHTML)">
+                        <option disabled selected>Canales</option>
+                    </select>
 
                 </div>
             </div>

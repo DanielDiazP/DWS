@@ -8,7 +8,7 @@ console.log("Connecting to " + wsUri);
 var idToken;
 var websocket;
 var user;
-var canal = 0;
+var canal = "global";
 
 
 
@@ -39,17 +39,13 @@ function conectar(email, password) {
 
         switch (texto.tipo) {
             case "texto":
-                for (var objeto of texto) {
-                    writeToScreen("Recibido: " + objeto.mensaje);
-                }
+                writeToScreen("Recibido: " + texto.mensaje);
                 break;
             case "canales":
-                var canales = JSON.parse(texto.mensaje);
-                for (var canal in canales) {
-                    $("#canales").append(new Option(canales[canal], canales[canal]));
+                $('#canales').css('display', 'block');
+                for (var canal in texto.nombre) {
+                    $("#canales").append(new Option(texto.nombre[canal], texto.nombre[canal]));
                 }
-                writeToScreen("Recibido: " + texto);//
-
                 break;
         }
 
@@ -63,27 +59,26 @@ function conectar(email, password) {
     };
 }
 
+function crearCanal() {
+    var nombre = prompt("Nombre del canal a crear");
+    var object = {
+        "nombre_user": user,
+        "tipo": "canal",
+        "canalNuevo": nombre
+    };
+    websocket.send(JSON.stringify(object));
+}
 
 function getCanales() {
-
-
-
-
     var object = {
-
-        "tipo": "canales",
-        "contenido": "",
-        "key": passphrase,
-        "salt": salt,
-        "iv": iv
+        "tipo": "canales"
     };
-
 
     websocket.send(JSON.stringify(object));
 
 }
 
-function enviarMensaje(canal) {
+function enviarMensaje() {
 
     var texto = icon_prefix2.value;
     var fecha;
@@ -96,7 +91,7 @@ function enviarMensaje(canal) {
         "tipo": "texto",
         "mensaje": texto,
         "nombre_user": user,
-        "id_canal": canal,
+        "canalActual": canal,
         "fecha": fecha
     };
     websocket.send(JSON.stringify(object));
@@ -104,15 +99,19 @@ function enviarMensaje(canal) {
 }
 
 function cargarMensajes() {
-    var fecha1=document.getElementById("fecha1");
-    var fecha2=document.getElementById("fecha2");
-    
+    var fecha1 = document.getElementById("fecha1");
+    var fecha2 = document.getElementById("fecha2");
+
     var object = {
         "fecha": fecha1.value,
         "fecha2": fecha2.value,
         "nombre_user": user
     };
     websocket.send(JSON.stringify(object));
+}
+
+function cambiarCanal(opcion) {
+    canal = opcion;
 }
 
 

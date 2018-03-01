@@ -45,16 +45,17 @@ import servicios.PasswordServicios;
         decoders = MessageDecoder.class,
         encoders = MessageEncoder.class,
         configurator = ServletAwareConfig.class
-        )
+)
 public class ServerEndPoint {
 
     ChatServicios cS = new ChatServicios();
     Usuario u;
+    HttpSession httpSession;
 
     @OnOpen
     public void onOpen(Session session, @PathParam("user") String user, @PathParam("pass") String pass, EndpointConfig config) throws InvalidKeySpecException {
         session.getUserProperties().put("user", user);
-        HttpSession httpSession = (HttpSession) config.getUserProperties().get("httpsession");
+        httpSession = (HttpSession) config.getUserProperties().get("httpsession");
         if (user.equals("google@gmail.com")) {
             session.getUserProperties().put("login", "NO");
         } else {
@@ -110,21 +111,37 @@ public class ServerEndPoint {
                 }
 
             } else {
-                if (mensaje.getFecha() != null) {
-                    cS.guardarMensaje(mensaje);
-                }
-                for (Session sesion : sessionQueManda.getOpenSessions()) {
+                if (mensaje.getTipo().equals("canales")) {
+                    mensaje.setNombre(cS.getCanales());
                     try {
-                        if (!sesion.equals(sessionQueManda)) {
-                            try {
-                                sesion.getBasicRemote().sendObject(mensaje);
-                            } catch (EncodeException ex) {
-                                Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    } catch (IOException e) {
-                        Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, e);
+                        sessionQueManda.getBasicRemote().sendObject(mensaje);
+                    } catch (EncodeException | IOException ex) {
+                        Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                } else {
+
+                    if (mensaje.getFecha() != null) {
+                        cS.guardarMensaje(mensaje);
+                    }
+
+                    if (mensaje.getTipo().equals("canal")) {
+                        cS.nuevoCanal(mensaje);
+                    }
+
+                    for (Session sesion : sessionQueManda.getOpenSessions()) {
+                        try {
+                            if (!sesion.equals(sessionQueManda)) {
+                                try {
+                                    sesion.getBasicRemote().sendObject(mensaje);
+                                } catch (EncodeException ex) {
+                                    Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        } catch (IOException e) {
+                            Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, e);
+                        }
+                    }
+
                 }
             }
 
@@ -134,6 +151,7 @@ public class ServerEndPoint {
 
     @OnClose
     public void onClose(Session session) {
+
         for (Session s : session.getOpenSessions()) {
             try {
                 System.out.println(s.getUserProperties().get("user"));
@@ -142,6 +160,11 @@ public class ServerEndPoint {
                 Logger.getLogger(ServerEndPoint.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        ArrayList<String> users = new ArrayList<>();
+        for (Session s : session.getOpenSessions()) {
+            users.add((String) s.getUserProperties().get("user"));
+        }
+        httpSession.setAttribute("conectados", users);
     }
 
 }

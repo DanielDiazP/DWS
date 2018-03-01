@@ -25,22 +25,20 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 public class ChatDao {
 
     public Usuario datosUsuario(Usuario usuario) {
-        Usuario user=null;
+        Usuario user = null;
         try {
             JdbcTemplate jtm = new JdbcTemplate(
                     DBConnection.getInstance().getDataSource());
 
             String SQL = "Select * from registro where nombre=?";
-            user = (Usuario)jtm.queryForObject(
-                SQL, new Object[]{usuario.getNombre()}, new BeanPropertyRowMapper(Usuario.class));
-            
+            user = (Usuario) jtm.queryForObject(
+                    SQL, new Object[]{usuario.getNombre()}, new BeanPropertyRowMapper(Usuario.class));
 
         } catch (Exception e) {
             Logger.getLogger(ChatDao.class.getName()).log(Level.SEVERE, null, e);
         }
         return user;
     }
-    
 
     public int nuevoUsuario(Usuario usuario) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
@@ -52,7 +50,45 @@ public class ChatDao {
         return jdbcInsert.execute(parametros);
     }
 
-    public List<Canal> todosCanales() {
+    public void guardarMensaje(Mensaje mensaje) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(DBConnection.getInstance().getDataSource()).withTableName("mensajes");
+        Map<String, Object> parametros = new HashMap<>();
+
+        parametros.put("mensaje", mensaje.getMensaje());
+        parametros.put("fecha", mensaje.getFecha());
+        parametros.put("id_canal", mensaje.getId_canal());
+        parametros.put("nombre_user", mensaje.getNombre_user());
+        jdbcInsert.execute(parametros);
+    }
+
+    public List<Mensaje> cargarMensaje(Mensaje mensaje) {
+        List<Mensaje> mensajes = null;
+        try {
+            JdbcTemplate jtm = new JdbcTemplate(
+                    DBConnection.getInstance().getDataSource());
+
+            String SQL = "Select * from mensajes where fecha between ? AND ?";
+            mensajes = (List<Mensaje>) jtm.queryForObject(
+                    SQL, new Object[]{mensaje.getFecha(), mensaje.getFecha2()}, new BeanPropertyRowMapper(Mensaje.class));
+
+        } catch (Exception e) {
+            Logger.getLogger(ChatDao.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return mensajes;
+    }
+
+    public void nuevoCanal(Mensaje mensaje) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
+                DBConnection.getInstance().getDataSource()).withTableName("canales").usingGeneratedKeyColumns("id");
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put("nombre", mensaje.getCanalNuevo());
+        parameters.put("user_admin", mensaje.getNombre_user());
+        jdbcInsert.executeAndReturnKey(parameters).longValue();
+
+    }
+
+    public List<Canal> getCanales() {
 
         JdbcTemplate jtm = new JdbcTemplate(
                 DBConnection.getInstance().getDataSource());
@@ -62,43 +98,4 @@ public class ChatDao {
         return listaCanales;
     }
 
-
-    public void guardarMensaje(Mensaje mensaje){
-        SimpleJdbcInsert jdbcInsert=new SimpleJdbcInsert(DBConnection.getInstance().getDataSource()).withTableName("mensajes");
-        Map<String,Object>  parametros=new HashMap<>();
-        
-        parametros.put("mensaje", mensaje.getMensaje());
-        parametros.put("fecha", mensaje.getFecha());
-        parametros.put("id_canal", mensaje.getId_canal());
-        parametros.put("nombre_user", mensaje.getNombre_user());
-        jdbcInsert.execute(parametros);
-    }
-    
-    public List<Mensaje> cargarMensaje(Mensaje mensaje) {
-        List<Mensaje> mensajes=null;
-        try {
-            JdbcTemplate jtm = new JdbcTemplate(
-                    DBConnection.getInstance().getDataSource());
-
-            String SQL = "Select * from mensajes right join canales where mensajes.fecha between CAST(? AS DATE) AND CAST(? AS DATE) on canales.id=?";
-            List<Mensaje> peticion = (List<Mensaje>) jtm.queryForObject(
-                SQL, new Object[]{mensaje.getFecha(),mensaje.getFecha2(),mensaje.getId_canal()}, new BeanPropertyRowMapper(Mensaje.class));
-            mensajes=peticion;
-
-        } catch (Exception e) {
-            Logger.getLogger(ChatDao.class.getName()).log(Level.SEVERE, null, e);
-        }
-      return mensajes;
-    }
-    /// hasta aqui
-    public Canal nuevoCanal(Canal canal) {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(
-                DBConnection.getInstance().getDataSource()).withTableName("CANALES").usingGeneratedKeyColumns("ID");
-        Map<String, Object> parameters = new HashMap<>();
-
-        parameters.put("Nombre", canal.getNombre());
-        canal.setId(jdbcInsert.executeAndReturnKey(parameters).longValue());
-
-        return canal;
-    }
 }

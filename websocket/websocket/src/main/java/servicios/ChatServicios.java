@@ -10,6 +10,7 @@ import model.Usuario;
 import dao.ChatDao;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -53,16 +54,30 @@ public class ChatServicios {
         ChatDao dao = new ChatDao();
         return dao.nuevoUsuario(user) > 0;
     }
-    
-    public void guardarMensaje(Mensaje mensaje){
+
+    public void guardarMensaje(Mensaje mensaje) {
         ChatDao dao = new ChatDao();
         dao.guardarMensaje(mensaje);
     }
-    
-     public List<Mensaje> cargarMensaje(Mensaje mensaje){
+
+    public List<Mensaje> cargarMensaje(Mensaje mensaje) {
         ChatDao dao = new ChatDao();
         return dao.cargarMensaje(mensaje);
     }
-    
-    
+
+    public ArrayList<String> getCanales() {
+        ChatDao dao = new ChatDao();
+        List<Canal> canales = dao.getCanales();
+        ArrayList<String> nombres = new ArrayList<>();
+        for (Canal c : canales) {
+            nombres.add((String) c.getNombre());
+        }
+        return nombres;
+    }
+
+    public void nuevoCanal(Mensaje mensaje) {
+        ChatDao dao = new ChatDao();
+        dao.nuevoCanal(mensaje);
+    }
+
 }
